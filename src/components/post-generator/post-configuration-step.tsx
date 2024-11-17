@@ -2,7 +2,6 @@
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PostData } from "@/app/dashboard/post/page";
 import { Target, Users, ShoppingCart } from "lucide-react";
@@ -29,10 +28,6 @@ export default function PostConfigurationStep({
 
   const handleIdeasChange = (ideas: string) => {
     setPostData({ ...postData, ideas });
-  };
-
-  const handleSubjectChange = (subject: string) => {
-    setPostData({ ...postData, subject });
   };
 
   const handleToneChange = (tone: string) => {
@@ -111,18 +106,9 @@ export default function PostConfigurationStep({
         <div className="space-y-4">
           <div>
             <Label htmlFor="subject" className="mb-2">
-              Sujet
+              Sujet et idées
             </Label>
-            <Input
-              id="subject"
-              value={postData.subject}
-              onChange={(e) => handleSubjectChange(e.target.value)}
-              placeholder="Ex: Marketing digital"
-            />
-          </div>
 
-          <div>
-            <Label className="mb-2">Idées</Label>
             <Textarea
               value={postData.ideas}
               onChange={(e) => handleIdeasChange(e.target.value)}

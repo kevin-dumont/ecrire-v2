@@ -10,11 +10,17 @@ export async function generateHooks(
   type: PostData["type"],
   subject: string
 ): Promise<{ hooks: string[]; error?: string }> {
-  // temp
-  // wait 1.6 seconds
   await new Promise((resolve) => setTimeout(resolve, 1600));
 
-  return { hooks: ["test", "test", "test", "test", "test"] };
+  return {
+    hooks: [
+      "Comment j'ai doublé ma productivité en 3 mois.\nVoici ma méthode pas à pas :",
+      "La technique secrète des entrepreneurs à succès.\nJe vous dévoile tout aujourd'hui.",
+      "J'ai testé toutes les méthodes de productivité.\nVoici celle qui fonctionne vraiment :",
+      "Le conseil qui a changé ma façon de travailler.\nEt qui pourrait changer la vôtre aussi.",
+      "La routine matinale des performeurs.\nJe vous explique pourquoi elle est si efficace.",
+    ],
+  };
 
   try {
     if (!CLAUDE_API_KEY) {

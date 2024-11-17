@@ -1,78 +1,36 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { PostData } from "@/app/dashboard/post/page";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
-import { generateHooks } from "@/lib/actions";
-import { useToast } from "@/hooks/use-toast";
 
 interface HookStepProps {
   postData: PostData;
   setPostData: (data: PostData) => void;
+  hooks: string[];
+  onGenerateHooks: () => Promise<void>;
+  isGenerating: boolean;
+  isInitialLoad: boolean;
 }
 
-export default function HookStep({ postData, setPostData }: HookStepProps) {
-  const [hooks, setHooks] = useState<string[]>([]);
+export default function HookStep({
+  postData,
+  setPostData,
+  hooks,
+  onGenerateHooks,
+  isGenerating,
+  isInitialLoad,
+}: HookStepProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const [hasGenerated, setHasGenerated] = useState(false);
-  const { toast } = useToast();
   const [attempts, setAttempts] = useState(0);
   const maxAttempts = 3;
   const hooksPerPage = 5;
 
-  const generateNewHooks = useCallback(async () => {
-    if (!postData.type || !postData.subject) {
-      toast({
-        title: "Information manquante",
-        description: "Veuillez d'abord remplir le type et le sujet du post.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const result = await generateHooks(postData.type, postData.subject);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      if (result.hooks && result.hooks.length > 0) {
-        setHooks((prevHooks) => {
-          const newHooks = [...prevHooks, ...result.hooks];
-          const newTotalPages = Math.ceil(newHooks.length / hooksPerPage);
-          setCurrentPage(newTotalPages - 1);
-          return newHooks;
-        });
-      }
-    } catch (error) {
-      console.error("Error generating hooks:", error);
-      toast({
-        title: "Erreur",
-        description:
-          "Impossible de générer de nouvelles accroches. Veuillez réessayer.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGenerating(false);
-      setIsInitialLoad(false);
-    }
-  }, [postData.subject, postData.type, toast]);
-
-  useEffect(() => {
-    if (!hasGenerated && postData.type && postData.subject) {
-      generateNewHooks();
-      setHasGenerated(true);
-    }
-  }, [postData.type, postData.subject, generateNewHooks, hasGenerated]);
-
   const handleGenerateMore = () => {
     if (attempts < maxAttempts) {
-      generateNewHooks();
+      onGenerateHooks();
       setAttempts(attempts + 1);
     }
   };

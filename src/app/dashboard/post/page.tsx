@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import PostConfigurationStep from "@/components/post-generator/post-configuration-step";
@@ -8,10 +8,11 @@ import HookStep from "@/components/post-generator/hook-step";
 import BodyStep from "@/components/post-generator/body-step";
 import ConclusionStep from "@/components/post-generator/conclusion-step";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { generateHooks } from "@/lib/actions";
+import { useToast } from "@/hooks/use-toast";
 
 export type PostData = {
   type: "TOFU" | "MOFU" | "BOFU" | null;
-  subject: string;
   ideas: string;
   selectedHook: string;
   selectedBody: string;
@@ -19,11 +20,17 @@ export type PostData = {
   tone: string;
 };
 
+const steps = [
+  { title: "Configuration du Post", component: PostConfigurationStep },
+  { title: "Accroche", component: HookStep },
+  { title: "Corps du Post", component: BodyStep },
+  { title: "Conclusion", component: ConclusionStep },
+];
+
 export default function PostGeneratorPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [postData, setPostData] = useState<PostData>({
     type: null,
-    subject: "",
     ideas: "",
     selectedHook: "",
     selectedBody: "",
@@ -31,24 +38,59 @@ export default function PostGeneratorPage() {
     tone: "normal",
   });
 
-  const steps = [
-    {
-      title: "Configuration du Post",
-      component: PostConfigurationStep,
-    },
-    {
-      title: "Accroche",
-      component: HookStep,
-    },
-    {
-      title: "Corps du Post",
-      component: BodyStep,
-    },
-    {
-      title: "Conclusion",
-      component: ConclusionStep,
-    },
-  ];
+  const [hookState, setHookState] = useState({
+    hooks: [] as string[],
+    isGenerating: false,
+    isInitialLoad: true,
+  });
+
+  const { toast } = useToast();
+
+  const generateNewHooks = useCallback(async () => {
+    if (!postData.type || !postData.ideas) {
+      toast({
+        title: "Information manquante",
+        description: "Veuillez d'abord remplir le type et les idées du post.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setHookState((prevState) => ({ ...prevState, isGenerating: true }));
+    try {
+      const result = await generateHooks(postData.type, postData.ideas);
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      if (result.hooks && result.hooks.length > 0) {
+        setHookState((prevState) => ({
+          ...prevState,
+          hooks: [...prevState.hooks, ...result.hooks],
+        }));
+      }
+    } catch (error) {
+      console.error("Error generating hooks:", error);
+      toast({
+        title: "Erreur",
+        description:
+          "Impossible de générer de nouvelles accroches. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setHookState((prevState) => ({
+        ...prevState,
+        isGenerating: false,
+        isInitialLoad: false,
+      }));
+    }
+  }, [postData.type, postData.ideas, toast]);
+
+  useEffect(() => {
+    if (currentStep === 2 && hookState.hooks.length === 0) {
+      generateNewHooks();
+    }
+  }, [currentStep, hookState.hooks.length, generateNewHooks]);
 
   const CurrentStepComponent = steps[currentStep - 1].component;
 
@@ -65,7 +107,7 @@ export default function PostGeneratorPage() {
   };
 
   return (
-    <div className="w-full max-w-full px-2 py-4">
+    <div className="w-full max-w-full p-4">
       <div className="flex flex-col lg:flex-row gap-4">
         <Card className="flex-1 p-4 sm:p-6 border-gradient">
           <div className="mb-4">
@@ -85,7 +127,14 @@ export default function PostGeneratorPage() {
             </div>
           </div>
 
-          <CurrentStepComponent postData={postData} setPostData={setPostData} />
+          <CurrentStepComponent
+            postData={postData}
+            setPostData={setPostData}
+            hooks={hookState.hooks}
+            onGenerateHooks={generateNewHooks}
+            isGenerating={hookState.isGenerating}
+            isInitialLoad={hookState.isInitialLoad}
+          />
 
           <div className="flex flex-col sm:flex-row justify-between gap-2 mt-14">
             <Button
