@@ -115,7 +115,7 @@ export default function PostConfigurationStep({
             <Textarea
               value={postData.ideas}
               onChange={(e) => handleIdeasChange(e.target.value)}
-              placeholder={`Ex: Comment créer un post LinkedIn\n- Une accroche qui interpelle\n- Une histoire personnelle\n- Des paragraphes courts\n- Un call-to-action`}
+              placeholder={`Ex: Comment créer un post LinkedIn\n- Une accroche qui interpelle\n- Une histoire personnelle\n...`}
               rows={6}
             />
           </div>

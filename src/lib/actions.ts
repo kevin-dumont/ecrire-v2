@@ -109,12 +109,11 @@ export async function generateBody(
 
     const prompt = [
       "Tu es un expert en marketing digital et en rédaction de posts LinkedIn.",
-      "Je veux que tu génères 3 versions différentes du corps principal d'un post LinkedIn.",
+      "Je veux que tu génères 3 versions différentes d'un post LinkedIn complet.",
       "",
       "Contexte:",
       `- Type de post: ${postData.type} (${typeDesc})`,
-      `- Sujet: "${postData.subject}"`,
-      `- Idées clés: "${postData.ideas}"`,
+      `- Sujet: "${postData.ideas}"`,
       `- Accroche choisie: "${postData.selectedHook}"`,
       "",
       "Le corps du post doit:",
@@ -124,6 +123,7 @@ export async function generateBody(
       "- Inclure des émojis pertinents",
       "- Faire entre 800 et 1200 caractères",
       "- Être écrit dans un style professionnel mais engageant",
+      "- Se terminer par une conclusion et un call-to-action pertinent",
       "",
       "Format de réponse souhaité:",
       "- Séparer chaque version par trois tirets (---)",
@@ -160,70 +160,6 @@ export async function generateBody(
   } catch (error) {
     console.error("Error generating body:", error);
     return { error: "Failed to generate body" };
-  }
-}
-
-export async function generateConclusions(
-  postData: PostData
-): Promise<{ conclusions?: string[]; error?: string }> {
-  try {
-    if (!CLAUDE_API_KEY) {
-      throw new Error("API key not configured");
-    }
-
-    const typeDesc = getTypeDescription(postData.type);
-    const prompt = [
-      "Tu es un expert en marketing digital et en rédaction de posts LinkedIn.",
-      "Je veux que tu génères 3 conclusions différentes pour un post LinkedIn.",
-      "",
-      "Contexte:",
-      `- Type de post: ${postData.type} (${typeDesc})`,
-      `- Sujet: "${postData.subject}"`,
-      `- Corps du post: "${postData.selectedBody}"`,
-      "",
-      "La conclusion doit:",
-      "- Être composée de 2 à 6 lignes",
-      "- Inclure un call-to-action adapté au type de post",
-      "- Encourager l'engagement (commentaires, likes, partages)",
-      "- Utiliser 2-3 émojis pertinents",
-      "- Être cohérente avec le ton du post",
-      "- Terminer par une question ou une invitation claire",
-      "",
-      "Format de réponse souhaité:",
-      "- Séparer chaque conclusion par une ligne vide",
-      "- Pas de numérotation",
-      "- Pas d'explications supplémentaires",
-      "",
-      "Voici 1000 accroches pour inspiration:",
-      accroches,
-    ].join("\n");
-
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": CLAUDE_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-3-sonnet-20240229",
-        max_tokens: 1024,
-        messages: [{ role: "system", content: prompt }],
-      }),
-    });
-
-    const data = await response.json();
-
-    const content = data.content[0].text;
-    const conclusions = content
-      .split("\n\n")
-      .map((conclusion: string) => conclusion.trim())
-      .filter(Boolean);
-
-    return { conclusions };
-  } catch (error) {
-    console.error("Error generating conclusions:", error);
-    return { error: "Failed to generate conclusions" };
   }
 }
 

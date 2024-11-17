@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   navigation: { name: string; href: string; icon: React.ComponentType }[];
@@ -15,45 +19,83 @@ export default function Sidebar({
   handleSignOut,
   onNavigate,
 }: SidebarProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 border-r border-border/40 bg-background/80 backdrop-blur-xl feature-card">
+    <aside
+      className={cn(
+        "fixed top-0 left-0 h-screen border-r border-border/40 bg-background/80 backdrop-blur-xl feature-card transition-all duration-300",
+        isExpanded ? "w-64" : "w-14 hover:w-64 group"
+      )}
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+    >
       <div className="flex h-full flex-col">
-        <div className="flex h-16 items-center px-6 border-b border-border/40">
-          <Link href="/dashboard" className="text-lg font-semibold" onClick={onNavigate}>
-            LinkedPost
-          </Link>
+        <div className="h-14 border-b border-border/40">
+          <div className="h-full px-4 flex items-center">
+            <Link 
+              href="/dashboard" 
+              className={cn(
+                "ml-[2px] text-lg font-semibold transition-opacity duration-300",
+                !isExpanded && "opacity-0 group-hover:opacity-100"
+              )} 
+              onClick={onNavigate}
+            >
+              LinkedPost
+            </Link>
+          </div>
         </div>
-        <nav className="flex-1 space-y-1 px-4 py-4">
+
+        <nav className="flex-1 py-2">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
+            const Icon = item.icon;
 
             return (
-              <Link key={item.name} href={item.href} className="block mb-4" onClick={onNavigate}>
+              <Link key={item.name} href={item.href} onClick={onNavigate}>
                 <Button
                   variant={isActive ? "secondary" : "ghost"}
-                  size="lg"
-                  className="w-full justify-start gap-4 rounded-lg"
+                  className={cn(
+                    "relative w-full h-10 rounded-none justify-start",
+                    isActive ? "bg-primary/10 hover:bg-primary/20" : "hover:bg-primary/5"
+                  )}
                 >
-                  {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-                  {/* @ts-expect-error */}
-                  <item.icon className="h-4 w-4" />
-                  {item.name}
+                  <Icon className="absolute left-4 h-5 w-5 stroke-[1.5] text-muted-foreground" />
+                  <span
+                    className={cn(
+                      "absolute left-14 transition-opacity duration-300 text-muted-foreground",
+                      !isExpanded && "opacity-0 group-hover:opacity-100"
+                    )}
+                  >
+                    {item.name}
+                  </span>
                 </Button>
               </Link>
             );
           })}
         </nav>
-        <div className="border-t border-border/40 p-4">
+
+        <div className="border-t border-border/40">
           <Button
             variant="ghost"
-            className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
+            className={cn(
+              "relative w-full h-10 rounded-none justify-start hover:bg-primary/5",
+              "text-muted-foreground hover:text-foreground"
+            )}
             onClick={() => {
               handleSignOut();
               onNavigate?.();
             }}
           >
-            <LogOut className="h-4 w-4" />
-            Déconnexion
+            <LogOut className="absolute left-4 h-5 w-5 stroke-[1.5]" />
+            <span
+              className={cn(
+                "absolute left-14 transition-opacity duration-300",
+                !isExpanded && "opacity-0 group-hover:opacity-100"
+              )}
+            >
+              Déconnexion
+            </span>
           </Button>
         </div>
       </div>

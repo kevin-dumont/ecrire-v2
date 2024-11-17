@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PenSquare } from "lucide-react";
+import { PenLine } from "lucide-react";
 import Link from "next/link";
 
 export default function DashboardPage() {
@@ -22,7 +22,7 @@ export default function DashboardPage() {
               </div>
               <Link href="/dashboard/post">
                 <Button className="button-gradient">
-                  <PenSquare className="mr-2 h-4 w-4" />
+                  <PenLine className="mr-2 h-5 w-5 stroke-[1.5]" />
                   Nouveau post
                 </Button>
               </Link>
