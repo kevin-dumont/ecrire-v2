@@ -24,7 +24,7 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-screen border-r border-border/40 bg-background/80 backdrop-blur-xl feature-card transition-all duration-300",
+        "fixed top-0 left-0 h-screen border-r border-border/40 bg-background/80 backdrop-blur-xl feature-card transition-all duration-300 z-50",
         isExpanded ? "w-64" : "w-14 hover:w-64 group"
       )}
       onMouseEnter={() => setIsExpanded(true)}
@@ -33,12 +33,12 @@ export default function Sidebar({
       <div className="flex h-full flex-col">
         <div className="h-14 border-b border-border/40">
           <div className="h-full px-4 flex items-center">
-            <Link 
-              href="/dashboard" 
+            <Link
+              href="/dashboard"
               className={cn(
                 "ml-[2px] text-lg font-semibold transition-opacity duration-300",
                 !isExpanded && "opacity-0 group-hover:opacity-100"
-              )} 
+              )}
               onClick={onNavigate}
             >
               LinkedPost
@@ -56,8 +56,10 @@ export default function Sidebar({
                 <Button
                   variant={isActive ? "secondary" : "ghost"}
                   className={cn(
-                    "relative w-full h-10 rounded-none justify-start",
-                    isActive ? "bg-primary/10 hover:bg-primary/20" : "hover:bg-primary/5"
+                    "relative w-full h-14 rounded-none justify-start",
+                    isActive
+                      ? "bg-primary/10 hover:bg-primary/20"
+                      : "hover:bg-primary/5"
                   )}
                 >
                   <Icon className="absolute left-4 h-5 w-5 stroke-[1.5] text-muted-foreground" />
@@ -79,7 +81,7 @@ export default function Sidebar({
           <Button
             variant="ghost"
             className={cn(
-              "relative w-full h-10 rounded-none justify-start hover:bg-primary/5",
+              "relative w-full h-14 rounded-none justify-start hover:bg-primary/5",
               "text-muted-foreground hover:text-foreground"
             )}
             onClick={() => {

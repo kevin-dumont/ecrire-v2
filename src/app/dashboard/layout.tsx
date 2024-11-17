@@ -51,18 +51,20 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen gradient-bg">
-      {/* Mobile Header */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-14 border-b border-border/40 bg-background/80 backdrop-blur-xl z-50 px-4 flex items-center justify-between feature-card">
         <Button variant="ghost" size="icon" className="h-9 w-9">
-          <Menu className="h-5 w-5 stroke-[1.5] text-muted-foreground" onClick={() => setIsOpen(true)} />
+          <Menu
+            className="h-5 w-5 stroke-[1.5] text-muted-foreground"
+            onClick={() => setIsOpen(true)}
+          />
         </Button>
         <span className="text-base font-semibold">LinkedPost</span>
-        <div className="w-9" /> {/* Spacer pour centrer le titre */}
+        <div className="w-9" />
       </div>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetContent 
-          side="left" 
+        <SheetContent
+          side="left"
           className="p-0 w-64 border-r border-border/40 bg-background/80 backdrop-blur-xl feature-card"
         >
           <div className="h-full bg-transparent">
@@ -80,7 +82,9 @@ export default function DashboardLayout({
                     variant={isActive ? "secondary" : "ghost"}
                     className={cn(
                       "relative w-full h-10 rounded-none justify-start",
-                      isActive ? "bg-primary/10 hover:bg-primary/20" : "hover:bg-primary/5"
+                      isActive
+                        ? "bg-primary/10 hover:bg-primary/20"
+                        : "hover:bg-primary/5"
                     )}
                     onClick={() => {
                       window.location.href = item.href;
