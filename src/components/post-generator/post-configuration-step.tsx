@@ -23,15 +23,18 @@ export default function PostConfigurationStep({
   setPostData,
 }: PostConfigurationStepProps) {
   const handleTypeChange = (value: "TOFU" | "MOFU" | "BOFU") => {
-    setPostData({ ...postData, type: value });
+    const updatedData = { ...postData, type: value };
+    setPostData(updatedData);
   };
 
   const handleIdeasChange = (ideas: string) => {
-    setPostData({ ...postData, ideas });
+    const updatedData = { ...postData, ideas };
+    setPostData(updatedData);
   };
 
   const handleToneChange = (tone: string) => {
-    setPostData({ ...postData, tone });
+    const updatedData = { ...postData, tone };
+    setPostData(updatedData);
   };
 
   const types = [
@@ -72,7 +75,7 @@ export default function PostConfigurationStep({
       </div>
 
       <div>
-        <Label className="mb-2">Type de Post</Label>
+        <Label className="mb-3">Type de Post</Label>
         <RadioGroup
           value={postData.type || undefined}
           onValueChange={handleTypeChange}
@@ -105,20 +108,20 @@ export default function PostConfigurationStep({
       <div className="space-y-6 mt-6">
         <div className="space-y-4">
           <div>
-            <Label htmlFor="subject" className="mb-2">
+            <Label htmlFor="subject" className="mt-6 mb-3">
               Sujet et idées
             </Label>
 
             <Textarea
               value={postData.ideas}
               onChange={(e) => handleIdeasChange(e.target.value)}
-              placeholder="Ex: 1. Pratiques, 2. Outils, 3. Stratégies"
-              rows={4}
+              placeholder={`Ex: Comment créer un post LinkedIn\n- Une accroche qui interpelle\n- Une histoire personnelle\n- Des paragraphes courts\n- Un call-to-action`}
+              rows={6}
             />
           </div>
 
           <div>
-            <Label htmlFor="tone" className="mb-2">
+            <Label htmlFor="tone" className="mt-6 mb-3">
               Ton du Post
             </Label>
             <Select onValueChange={handleToneChange} defaultValue="normal">

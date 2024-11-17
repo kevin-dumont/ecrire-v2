@@ -21,10 +21,26 @@ export type PostData = {
 };
 
 const steps = [
-  { title: "Configuration du Post", component: PostConfigurationStep },
-  { title: "Accroche", component: HookStep },
-  { title: "Corps du Post", component: BodyStep },
-  { title: "Conclusion", component: ConclusionStep },
+  {
+    title: "Configuration du Post",
+    component: PostConfigurationStep,
+    validate: (data: PostData) => data.type && data.ideas && data.tone,
+  },
+  {
+    title: "Accroche",
+    component: HookStep,
+    validate: (data: PostData) => data.selectedHook !== "",
+  },
+  {
+    title: "Corps du Post",
+    component: BodyStep,
+    validate: (data: PostData) => data.selectedBody !== "",
+  },
+  {
+    title: "Conclusion",
+    component: ConclusionStep,
+    validate: (data: PostData) => data.selectedConclusion !== "",
+  },
 ];
 
 export default function PostGeneratorPage() {
@@ -37,6 +53,13 @@ export default function PostGeneratorPage() {
     selectedConclusion: "",
     tone: "normal",
   });
+
+  const [isNextEnabled, setIsNextEnabled] = useState(false);
+
+  useEffect(() => {
+    const currentValidation = steps[currentStep - 1].validate;
+    setIsNextEnabled(!!currentValidation(postData));
+  }, [postData, currentStep]);
 
   const [hookState, setHookState] = useState({
     hooks: [] as string[],
@@ -57,6 +80,7 @@ export default function PostGeneratorPage() {
     }
 
     setHookState((prevState) => ({ ...prevState, isGenerating: true }));
+
     try {
       const result = await generateHooks(postData.type, postData.ideas);
 
@@ -147,7 +171,7 @@ export default function PostGeneratorPage() {
             </Button>
             <Button
               onClick={handleNext}
-              disabled={currentStep === steps.length}
+              disabled={!isNextEnabled || currentStep === steps.length}
               className="order-0 sm:order-none"
             >
               {currentStep === steps.length ? (

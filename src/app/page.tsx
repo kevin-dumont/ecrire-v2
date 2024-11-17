@@ -8,13 +8,12 @@ import {
   Target,
   Trophy,
   Zap,
-  Star,
-  Sparkle,
   SparklesIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import RetroGrid from "@/components/ui/retro-grid";
 
 export default function Home() {
   const features = [
@@ -60,6 +59,7 @@ export default function Home() {
       <Navbar />
 
       <section className="relative py-48 overflow-hidden hero-gradient">
+        <RetroGrid />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <motion.div

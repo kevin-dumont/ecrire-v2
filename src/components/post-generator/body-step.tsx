@@ -20,7 +20,7 @@ export default function BodyStep({ postData, setPostData }: BodyStepProps) {
   const { toast } = useToast();
 
   const generateNewBodies = async () => {
-    if (!postData.type || !postData.subject || !postData.selectedHook) {
+    if (!postData.type || !postData.ideas || !postData.selectedHook) {
       toast({
         title: "Information manquante",
         description: "Veuillez d'abord sélectionner une accroche.",
@@ -38,10 +38,11 @@ export default function BodyStep({ postData, setPostData }: BodyStepProps) {
       if (result.bodies) {
         setBodies(result.bodies);
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Erreur",
-        description: "Impossible de générer de nouveaux contenus. Veuillez réessayer.",
+        description:
+          "Impossible de générer de nouveaux contenus. Veuillez réessayer.",
         variant: "destructive",
       });
     } finally {
