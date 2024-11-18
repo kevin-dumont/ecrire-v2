@@ -21,9 +21,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
+          // enableSystem={false}
+          // disableTransitionOnChange
         >
           <main>{children}</main>
           <Toaster />

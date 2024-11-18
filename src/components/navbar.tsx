@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function Navbar() {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
     setIsMenuOpen(false);
@@ -47,7 +48,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-base font-bold text-white">
+              <span className="text-base font-bold text-foreground">
                 LinkedPost
               </span>
             </Link>
@@ -55,26 +56,24 @@ export default function Navbar() {
 
           {/* Desktop menu */}
           <div className="hidden md:flex md:items-center md:space-x-8">
-            <button 
-              onClick={() => handleNavigation('features')}
-              className="text-sm text-white/70 hover:text-white transition-colors"
+            <button
+              onClick={() => handleNavigation("features")}
+              className="text-sm text-foreground hover:text-primary transition-colors"
             >
               Fonctionnalités
             </button>
             <button
-              onClick={() => handleNavigation('pricing')}
-              className="text-sm text-white/70 hover:text-white transition-colors"
+              onClick={() => handleNavigation("pricing")}
+              className="text-sm text-foreground hover:text-primary transition-colors"
             >
               Tarifs
             </button>
             <Link href="/login">
-              <Button 
-                size="sm"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
-              >
+              <Button variant="default" size="sm">
                 Essayer
               </Button>
             </Link>
+            <ThemeSwitcher />
           </div>
 
           {/* Mobile menu button */}
@@ -84,7 +83,7 @@ export default function Navbar() {
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Menu"
-              className="text-white/70 hover:text-white hover:bg-accent/50"
+              className="text-foreground hover:text-primary hover:bg-accent/50"
             >
               <Menu size={24} />
             </Button>
@@ -97,19 +96,21 @@ export default function Navbar() {
         <div className="md:hidden bg-background border-t border-border/40">
           <div className="px-2 pt-2 pb-3 space-y-1">
             <button
-              onClick={() => handleNavigation('features')}
-              className="block w-full text-left px-3 py-2 text-sm text-white/70 hover:text-white transition-colors"
+              onClick={() => handleNavigation("features")}
+              className="block w-full text-left px-3 py-2 text-sm text-foreground hover:text-primary transition-colors"
             >
               Fonctionnalités
             </button>
             <button
-              onClick={() => handleNavigation('pricing')}
-              className="block w-full text-left px-3 py-2 text-sm text-white/70 hover:text-white transition-colors"
+              onClick={() => handleNavigation("pricing")}
+              className="block w-full text-left px-3 py-2 text-sm text-foreground hover:text-primary transition-colors"
             >
               Tarifs
             </button>
+            <ThemeSwitcher />
+
             <Link href="/login">
-              <Button 
+              <Button
                 size="sm"
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
               >
