@@ -1,25 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export default function ThemeSwitcher() {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme) {
-      setTheme(storedTheme);
-    }
-  }, []);
+  const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("light", newTheme === "light");
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    setTheme(theme === "light" ? "dark" : "light");
   };
 
   return (
