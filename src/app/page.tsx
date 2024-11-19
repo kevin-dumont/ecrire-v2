@@ -38,20 +38,18 @@ export default function Home() {
   ];
 
   const freePlanFeatures = [
-    "5 posts par mois",
+    "3 posts",
     "Tous les types de contenus",
     "Suggestions d'accroches",
     "Édition assistée par IA",
   ];
 
   const proPlanFeatures = [
-    "Posts illimités",
+    "20 posts / mois",
     "Tous les types de contenus",
-    "Suggestions d'accroches multiples",
+    "Suggestions d'accroches",
     "Édition assistée par IA",
-    "Analyse de performance",
     "Support prioritaire",
-    "Garantie satisfait ou remboursé",
   ];
 
   return (
@@ -150,7 +148,7 @@ export default function Home() {
               <div className="bg-card p-8 border border-border rounded-lg h-full flex flex-col shadow-sm">
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-bold mb-2 text-foreground">
-                    Gratuit
+                    Essai gratuit
                   </h3>
                   <div className="flex justify-center items-baseline mb-4">
                     <span className="text-5xl font-extrabold text-foreground">
@@ -198,7 +196,7 @@ export default function Home() {
                   </h3>
                   <div className="flex justify-center items-baseline mb-4">
                     <span className="text-5xl font-extrabold text-foreground">
-                      20€
+                      29€
                     </span>
                     <span className="text-xl text-muted-foreground ml-2">
                       /mois
@@ -216,10 +214,7 @@ export default function Home() {
                 </div>
 
                 <Link href="/login" className="block mt-auto">
-                  <Button
-                    className="w-full bg-foreground text-background"
-                    size="lg"
-                  >
+                  <Button className="w-full" size="lg">
                     Commencer
                   </Button>
                 </Link>

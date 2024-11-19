@@ -53,18 +53,34 @@
 
 @layer utilities {
   /* Common gradients */
-  .hero-gradient {
+  .dark .hero-gradient {
     background: radial-gradient(
       circle at top center,
-      hsl(var(--primary-opacity)) 0%,
+      hsl(var(--primary-opacity)) 30%,
       hsl(var(--background)) 70%
     );
   }
 
-  .bg-pricing {
-    background: linear-gradient(
-      to bottom right,
-      hsl(var(--primary-opacity)) 1%,
+  .light .hero-gradient {
+    background: radial-gradient(
+      circle at top center,
+      hsl(var(--primary-opacity)) 100%,
+      hsl(var(--background)) 70%
+    );
+  }
+
+  .dark .bg-pricing {
+    background: radial-gradient(
+      circle at top center,
+      hsl(var(--primary-opacity)) 30%,
+      hsl(var(--background)) 100%
+    );
+  }
+
+  .light .bg-pricing {
+    background: radial-gradient(
+      circle at top center,
+      hsl(var(--primary-opacity)) 100%,
       hsl(var(--background)) 100%
     );
   }

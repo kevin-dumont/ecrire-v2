@@ -68,12 +68,16 @@ export default function Navbar() {
             >
               Tarifs
             </button>
-            <Link href="/login">
-              <Button variant="default" size="sm">
-                Essayer
-              </Button>
-            </Link>
-            <ThemeSwitcher />
+
+            <div className="flex items-center space-x-4">
+              <ThemeSwitcher />
+
+              <Link href="/login">
+                <Button variant="default" size="sm">
+                  Essayer
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {/* Mobile menu button */}
