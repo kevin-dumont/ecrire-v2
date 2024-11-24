@@ -199,13 +199,15 @@ export default function PostGeneratorPage() {
           </div>
         </Card>
 
-        <PostPreview
-          getDisplayText={getDisplayText}
-          isExpanded={isExpanded}
-          postData={postData}
-          setIsExpanded={setIsExpanded}
-          shouldShowSeeMore={shouldShowSeeMore}
-        />
+        {currentStep > 2 && (
+          <PostPreview
+            getDisplayText={getDisplayText}
+            isExpanded={isExpanded}
+            postData={postData}
+            setIsExpanded={setIsExpanded}
+            shouldShowSeeMore={shouldShowSeeMore}
+          />
+        )}
       </div>
     </div>
   );

@@ -52,11 +52,11 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen gradient-bg">
-      <div className="hidden md:flex top-0 left-14 right-0 h-14 border-b border-border bg-background backdrop-blur-xl z-40 px-4 items-center justify-end">
+      <div className="hidden md:flex top-0 left-14 right-0 h-14 border-b border-border/50 bg-background backdrop-blur-xl z-40 px-4 items-center justify-end">
         <ThemeSwitcher />
       </div>
 
-      <div className="md:hidden fixed top-0 left-0 right-0 h-14 border-b border-border/40 bg-background/80 backdrop-blur-xl z-50 px-4 flex items-center justify-between feature-card">
+      <div className="md:hidden fixed top-0 left-0 right-0 h-14 border-b border-border/50 bg-background/80 backdrop-blur-xl z-50 px-4 flex items-center justify-between feature-card">
         <Button variant="ghost" size="icon" className="h-9 w-9">
           <Menu
             className="h-5 w-5 stroke-[1.5] text-muted-foreground"

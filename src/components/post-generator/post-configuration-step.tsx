@@ -13,6 +13,43 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+const types = [
+  {
+    value: "TOFU",
+    label: "Acquérire des lead (TOFU)",
+    description:
+      "Acquérir de la visibilité et une grande découvrabilité avec un post grand public",
+    icon: Target,
+  },
+  {
+    value: "MOFU",
+    label: "Acquérir des prospects (MOFU)",
+    description:
+      "Générez des prospects qualifiés avec du contenu à valeur ajoutée",
+    icon: Users,
+  },
+  {
+    value: "BOFU",
+    label: "Convertir en clients (BOFU)",
+    description:
+      "Convertissez vos prospects en clients avec des offres ciblées",
+    icon: ShoppingCart,
+  },
+];
+
+const tones = [
+  { value: "normal", label: "Normal" },
+  { value: "serieux", label: "Sérieux" },
+  { value: "humour", label: "Humour" },
+  { value: "provocateur", label: "Provocateur" },
+];
+
+const sizes = [
+  { value: "short", label: "Court" },
+  { value: "medium", label: "Moyen" },
+  { value: "long", label: "Long" },
+];
+
 interface PostConfigurationStepProps {
   postData: PostData;
   setPostData: (data: PostData) => void;
@@ -37,33 +74,10 @@ export default function PostConfigurationStep({
     setPostData(updatedData);
   };
 
-  const types = [
-    {
-      value: "TOFU",
-      label: "TOFU",
-      description: "Visibilité et découvrabilité",
-      icon: Target,
-    },
-    {
-      value: "MOFU",
-      label: "MOFU",
-      description: "Générez des prospects",
-      icon: Users,
-    },
-    {
-      value: "BOFU",
-      label: "BOFU",
-      description: "Convertir en clients",
-      icon: ShoppingCart,
-    },
-  ];
-
-  const tones = [
-    { value: "normal", label: "Normal" },
-    { value: "serieux", label: "Sérieux" },
-    { value: "humour", label: "Humour" },
-    { value: "provocateur", label: "Provocateur" },
-  ];
+  const handleSizeChange = (size: string) => {
+    const updatedData = { ...postData, size };
+    setPostData(updatedData);
+  };
 
   return (
     <div className="space-y-6">
@@ -93,7 +107,7 @@ export default function PostConfigurationStep({
                 className="flex items-start space-x-2 border dark:border-neutral-800 rounded-lg p-3 cursor-pointer hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
               >
                 <type.icon className="h-5 w-5 text-primary shrink-0" />
-                <div className="space-y-0.5">
+                <div className="space-y-1.5">
                   <p className="font-medium leading-none">{type.label}</p>
                   <p className="text-xs text-muted-foreground">
                     {type.description}
@@ -120,22 +134,42 @@ export default function PostConfigurationStep({
             />
           </div>
 
-          <div>
-            <Label htmlFor="tone" className="mt-6 mb-3">
-              Ton du Post
-            </Label>
-            <Select onValueChange={handleToneChange} defaultValue="normal">
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Theme" />
-              </SelectTrigger>
-              <SelectContent>
-                {tones.map((tone) => (
-                  <SelectItem key={tone.value} value={tone.value}>
-                    {tone.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex gap-4">
+            <div>
+              <Label htmlFor="tone" className="mt-6 mb-3">
+                Ton du Post
+              </Label>
+              <Select onValueChange={handleToneChange} defaultValue="normal">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Theme" />
+                </SelectTrigger>
+                <SelectContent>
+                  {tones.map((tone) => (
+                    <SelectItem key={tone.value} value={tone.value}>
+                      {tone.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label htmlFor="size" className="mt-6 mb-3">
+                Taille du Post
+              </Label>
+              <Select onValueChange={handleSizeChange} defaultValue="long">
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Taille" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sizes.map((size) => (
+                    <SelectItem key={size.value} value={size.value}>
+                      {size.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>
