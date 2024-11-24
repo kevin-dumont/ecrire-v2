@@ -90,7 +90,7 @@ export default function PostConfigurationStep({
               />
               <Label
                 htmlFor={type.value}
-                className="flex items-start space-x-2 border border-neutral-800 rounded-lg p-3 cursor-pointer hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
+                className="flex items-start space-x-2 border dark:border-neutral-800 rounded-lg p-3 cursor-pointer hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
               >
                 <type.icon className="h-5 w-5 text-primary shrink-0" />
                 <div className="space-y-0.5">

@@ -85,6 +85,22 @@
     );
   }
 
+  .dark .gradient-bg {
+    background: linear-gradient(
+      to bottom right,
+      hsl(var(--primary-opacity)) 30%,
+      hsl(var(--background)) 100%
+    );
+  }
+
+  .light .gradient-bg {
+    background: linear-gradient(
+      to bottom right,
+      hsl(var(--primary-opacity)) 10%,
+      hsl(var(--background)) 100%
+    );
+  }
+
   /* Theme-specific styles */
   .feature-card {
     border: 1px solid hsl(var(--border));

@@ -11,6 +11,7 @@ import {
   Send,
   Eye,
   EyeOff,
+  ImageIcon,
 } from "lucide-react";
 import { PostData } from "@/app/dashboard/post/page";
 interface PostPreviewProps {
@@ -28,13 +29,13 @@ export function PostPreview({
   setIsExpanded,
   shouldShowSeeMore,
 }: PostPreviewProps) {
-  const [showImage, setShowImage] = useState(true);
+  const [showImage, setShowImage] = useState(false);
 
   return (
     <div className="hidden lg:flex flex-col gap-2 flex-[0.75]">
       <div className="flex items-center justify-between">
         <Button
-          variant="outline"
+          variant="link"
           size="sm"
           onClick={() => setIsExpanded(!isExpanded)}
           className="gap-2"
@@ -53,18 +54,12 @@ export function PostPreview({
         </Button>
         <div className="flex gap-2">
           <Button
-            variant={showImage ? "secondary" : "outline"}
+            variant="link"
             size="sm"
-            onClick={() => setShowImage(true)}
+            onClick={() => setShowImage((curr) => !curr)}
           >
-            Avec Image
-          </Button>
-          <Button
-            variant={showImage ? "outline" : "secondary"}
-            size="sm"
-            onClick={() => setShowImage(false)}
-          >
-            Sans Image
+            {!showImage ? "Avec Image" : "Sans Image"}
+            <ImageIcon className="h-4 w-4 stroke-[1.5]" />
           </Button>
         </div>
       </div>

@@ -147,7 +147,7 @@ export default function PostGeneratorPage() {
   return (
     <div className="w-full max-w-full p-8">
       <div className="flex flex-col lg:flex-row gap-8">
-        <Card className="flex-1 p-4 sm:p-6 border-gradient">
+        <Card className="flex-1 p-4 sm:p-6">
           <div className="mb-4">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
               <h1 className="text-2xl font-bold">Créer un post</h1>

@@ -9,6 +9,7 @@ import Sidebar from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 export default function DashboardLayout({
   children,
@@ -51,6 +52,10 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen gradient-bg">
+      <div className="hidden md:flex top-0 left-14 right-0 h-14 border-b border-border bg-background backdrop-blur-xl z-40 px-4 items-center justify-end">
+        <ThemeSwitcher />
+      </div>
+
       <div className="md:hidden fixed top-0 left-0 right-0 h-14 border-b border-border/40 bg-background/80 backdrop-blur-xl z-50 px-4 flex items-center justify-between feature-card">
         <Button variant="ghost" size="icon" className="h-9 w-9">
           <Menu
