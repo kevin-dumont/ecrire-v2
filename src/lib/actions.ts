@@ -100,6 +100,15 @@ export async function generateHooks(
 export async function generateBody(
   postData: PostData
 ): Promise<{ bodies?: string[]; error?: string }> {
+  await new Promise((resolve) => setTimeout(resolve, 1600));
+
+  return {
+    bodies: [
+      "Comment j'ai doublé ma productivité en 3 mois.\nVoici ma méthode pas à pas :",
+      "La technique secrète des entrepreneurs à succès.\nJe vous dévoile tout aujourd'hui.",
+      "J'ai testé toutes les méthodes de productivité.\nVoici celle qui fonctionne vraiment :",
+    ],
+  };
   try {
     if (!CLAUDE_API_KEY) {
       throw new Error("API key not configured");

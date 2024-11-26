@@ -53,7 +53,8 @@ export default function HookStep({
 
       {isInitialLoad && isGenerating ? (
         <div className="flex justify-center items-center py-8">
-          <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+          <RefreshCw className="h-8 w-8 animate-spin text-primary mr-3" />
+          Génération des accroches en cours...
         </div>
       ) : hooks.length > 0 ? (
         <div className="relative">
