@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePostContext } from "@/contexts/PostContext";
 
 const types = [
   {
@@ -50,15 +51,9 @@ const sizes = [
   { value: "long", label: "Long" },
 ];
 
-interface PostConfigurationStepProps {
-  postData: PostData;
-  setPostData: (data: PostData) => void;
-}
+export default function PostConfigurationStep() {
+  const { postData, setPostData } = usePostContext();
 
-export default function PostConfigurationStep({
-  postData,
-  setPostData,
-}: PostConfigurationStepProps) {
   const handleTypeChange = (value: "TOFU" | "MOFU" | "BOFU") => {
     const updatedData = { ...postData, type: value };
     setPostData(updatedData);

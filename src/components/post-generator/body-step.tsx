@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PostData } from "@/app/dashboard/post/page";
+import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -14,23 +14,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
-interface BodyStepProps {
-  postData: PostData;
-  setPostData: (data: PostData) => void;
-  bodies: string[];
-  onGenerateBodies: () => Promise<void>;
-  isBodyGenerating: boolean;
-  isBodyInitialized: boolean;
-}
-
-export default function BodyStep({
-  postData,
-  setPostData,
-  bodies,
-  onGenerateBodies,
-  isBodyGenerating,
-  isBodyInitialized,
-}: BodyStepProps) {
+export default function BodyStep() {
+  const {
+    postData,
+    setPostData,
+    bodyState: { bodies, isInitialLoad, isGenerating },
+    generateNewBodies,
+  } = usePostContext();
   const [copied, setCopied] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [attempts, setAttempts] = useState(0);
@@ -44,7 +34,7 @@ export default function BodyStep({
 
   const handleGenerateMore = () => {
     if (attempts < maxAttempts) {
-      onGenerateBodies();
+      generateNewBodies();
       setAttempts(attempts + 1);
     }
   };
@@ -69,7 +59,7 @@ export default function BodyStep({
         </p>
       </div>
 
-      {isBodyInitialized && isBodyGenerating ? (
+      {isInitialLoad && isGenerating ? (
         <div className="absolute inset-0 flex justify-center items-center">
           <RefreshCw className="h-8 w-8 animate-spin text-white mr-3" />
           Génération des contenus en cours...
@@ -128,11 +118,11 @@ export default function BodyStep({
             <Button
               variant="outline"
               onClick={handleGenerateMore}
-              disabled={isBodyGenerating || attempts >= maxAttempts}
+              disabled={isGenerating || attempts >= maxAttempts}
             >
               <RefreshCw
                 className={`mr-2 h-5 w-5 stroke-[1.5] ${
-                  isBodyGenerating ? "animate-spin" : ""
+                  isGenerating ? "animate-spin" : ""
                 }`}
               />
               Générer de nouveaux contenus ({maxAttempts - attempts} restantes)

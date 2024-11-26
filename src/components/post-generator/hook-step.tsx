@@ -1,28 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { PostData } from "@/app/dashboard/post/page";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { usePostContext } from "@/contexts/PostContext";
 
-interface HookStepProps {
-  postData: PostData;
-  setPostData: (data: PostData) => void;
-  hooks: string[];
-  onGenerateHooks: () => Promise<void>;
-  isGenerating: boolean;
-  isInitialLoad: boolean;
-}
+export default function HookStep() {
+  const {
+    postData,
+    setPostData,
+    hookState: { hooks, isGenerating, isInitialLoad },
+    generateNewHooks,
+  } = usePostContext();
 
-export default function HookStep({
-  postData,
-  setPostData,
-  hooks,
-  onGenerateHooks,
-  isGenerating,
-  isInitialLoad,
-}: HookStepProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const maxAttempts = 3;
@@ -30,7 +21,7 @@ export default function HookStep({
 
   const handleGenerateMore = () => {
     if (attempts < maxAttempts) {
-      onGenerateHooks();
+      generateNewHooks();
       setAttempts(attempts + 1);
     }
   };

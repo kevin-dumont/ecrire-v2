@@ -1,181 +1,18 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import PostConfigurationStep from "@/components/post-generator/post-configuration-step";
-import HookStep from "@/components/post-generator/hook-step";
-import BodyStep from "@/components/post-generator/body-step";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { generateHooks, generateBody } from "@/lib/actions";
-import { useToast } from "@/hooks/use-toast";
 import { PostPreview } from "@/components/post-generator/post-preview";
-import { PostEditionsStep } from "@/components/post-generator/post-editions-step";
+import { PostProvider, usePostContext } from "@/contexts/PostContext";
 
 const MAX_VISIBLE_CHARS = 300;
 
-export type PostData = {
-  type: "TOFU" | "MOFU" | "BOFU" | null;
-  ideas: string;
-  selectedHook: string;
-  selectedBody: string;
-  tone: string;
-};
-
-const steps = [
-  {
-    title: "Configuration du Post",
-    component: PostConfigurationStep,
-    validate: (data: PostData) => data.type && data.ideas && data.tone,
-  },
-  {
-    title: "Accroche",
-    component: HookStep,
-    validate: (data: PostData) => data.selectedHook !== "",
-  },
-  {
-    title: "Corps du Post",
-    component: BodyStep,
-    validate: (data: PostData) => data.selectedBody !== "",
-  },
-  {
-    title: "Editions du post",
-    component: PostEditionsStep,
-    validate: (data: PostData) => data.selectedBody !== "",
-  },
-];
-
-export default function PostGeneratorPage() {
-  const [currentStep, setCurrentStep] = useState(1);
+function PostGeneratorContent() {
+  const { postData, currentStep, setCurrentStep, isNextEnabled, steps } =
+    usePostContext();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [postData, setPostData] = useState<PostData>({
-    type: null,
-    ideas: "",
-    selectedHook: "",
-    selectedBody: "",
-    tone: "normal",
-  });
-
-  const [isNextEnabled, setIsNextEnabled] = useState(false);
-  const [hookState, setHookState] = useState({
-    hooks: [] as string[],
-    isGenerating: false,
-    isInitialLoad: true,
-  });
-
-  const [bodyState, setBodyState] = useState({
-    bodies: [] as string[],
-    isGenerating: false,
-    isInitialLoad: true,
-  });
-
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const currentValidation = steps[currentStep - 1].validate;
-    setIsNextEnabled(!!currentValidation(postData));
-  }, [postData, currentStep]);
-
-  const generateNewHooks = useCallback(async () => {
-    if (!postData.type || !postData.ideas) {
-      toast({
-        title: "Information manquante",
-        description: "Veuillez d'abord remplir le type et les idées du post.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setHookState((prevState) => ({ ...prevState, isGenerating: true }));
-
-    try {
-      const result = await generateHooks(postData.type, postData.ideas);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      if (result.hooks && result.hooks.length > 0) {
-        setHookState((prevState) => ({
-          ...prevState,
-          hooks: [...prevState.hooks, ...result.hooks],
-        }));
-      }
-    } catch (error) {
-      console.error("Error generating hooks:", error);
-      toast({
-        title: "Erreur",
-        description:
-          "Impossible de générer de nouvelles accroches. Veuillez réessayer.",
-        variant: "destructive",
-      });
-    } finally {
-      setHookState((prevState) => ({
-        ...prevState,
-        isGenerating: false,
-        isInitialLoad: false,
-      }));
-    }
-  }, [postData.type, postData.ideas, toast]);
-
-  const generateNewBodies = useCallback(async () => {
-    if (!postData.type || !postData.ideas || !postData.selectedHook) {
-      toast({
-        title: "Information manquante",
-        description: "Veuillez d'abord sélectionner une accroche.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setBodyState((prevState) => ({ ...prevState, isGenerating: true }));
-
-    try {
-      const result = await generateBody(postData);
-      if (result.error) {
-        throw new Error(result.error);
-      }
-      if (result.bodies) {
-        setBodyState((prevState) => ({
-          ...prevState,
-          bodies: [...prevState.bodies, ...(result.bodies || [])],
-        }));
-      }
-    } catch {
-      toast({
-        title: "Erreur",
-        description:
-          "Impossible de générer de nouveaux contenus. Veuillez réessayer.",
-        variant: "destructive",
-      });
-    } finally {
-      setBodyState((prevState) => ({
-        ...prevState,
-        isGenerating: false,
-        isInitialLoad: false,
-      }));
-    }
-  }, [postData, toast]);
-
-  useEffect(() => {
-    if (currentStep === 2 && hookState.hooks.length === 0) {
-      generateNewHooks();
-    }
-  }, [currentStep, hookState.hooks.length, generateNewHooks]);
-
-  useEffect(() => {
-    if (
-      currentStep === 3 &&
-      bodyState.bodies.length === 0 &&
-      bodyState.isInitialLoad
-    ) {
-      generateNewBodies();
-    }
-  }, [
-    currentStep,
-    bodyState.bodies.length,
-    bodyState.isInitialLoad,
-    generateNewBodies,
-  ]);
 
   const CurrentStepComponent = steps[currentStep - 1].component;
 
@@ -231,18 +68,7 @@ export default function PostGeneratorPage() {
             </div>
           </div>
 
-          <CurrentStepComponent
-            postData={postData}
-            setPostData={setPostData}
-            hooks={hookState.hooks}
-            onGenerateHooks={generateNewHooks}
-            isGenerating={hookState.isGenerating}
-            isInitialLoad={hookState.isInitialLoad}
-            bodies={bodyState.bodies}
-            onGenerateBodies={generateNewBodies}
-            isBodyGenerating={bodyState.isGenerating}
-            isBodyInitialLoad={bodyState.isInitialLoad}
-          />
+          <CurrentStepComponent />
 
           <div className="flex flex-col sm:flex-row justify-between gap-2 mt-14">
             <Button
@@ -280,5 +106,13 @@ export default function PostGeneratorPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PostGeneratorPage() {
+  return (
+    <PostProvider>
+      <PostGeneratorContent />
+    </PostProvider>
   );
 }

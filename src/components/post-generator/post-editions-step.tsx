@@ -1,5 +1,3 @@
-import { PostData } from "@/app/dashboard/post/page";
-
-export const PostEditionsStep = ({ postData }: { postData: PostData }) => {
+export const PostEditionsStep = () => {
   return <div>PostEditionsStep</div>;
 };
