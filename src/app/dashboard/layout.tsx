@@ -63,7 +63,7 @@ export default function DashboardLayout({
             onClick={() => setIsOpen(true)}
           />
         </Button>
-        <span className="text-base font-semibold">LinkedPost</span>
+        <span className="text-white font-semibold">LinkedPost</span>
         <div className="w-9" />
       </div>
 

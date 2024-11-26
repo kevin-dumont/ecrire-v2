@@ -25,19 +25,19 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-screen border-r border-border/50 bg-background/80 backdrop-blur-xl transition-all duration-300 z-50",
+        "fixed top-0 left-0 h-screen border-r border-slate-700 bg-gray-950 backdrop-blur-xl transition-all duration-300 z-50",
         isExpanded ? "w-64" : "w-14 hover:w-64 group"
       )}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="flex h-full flex-col">
-        <div className="h-14 border-b border-border/50">
+        <div className="h-14 border-b border-slate-700">
           <div className="h-full px-4 flex items-center">
             <Link
               href="/dashboard"
               className={cn(
-                "ml-[2px] text-lg font-semibold transition-opacity duration-300",
+                "ml-[2px] text-lg font-semibold transition-opacity duration-300 text-white",
                 !isExpanded && "opacity-0 group-hover:opacity-100"
               )}
               onClick={onNavigate}
@@ -50,7 +50,7 @@ export default function Sidebar({
         <nav className="flex-1 py-2">
           {navigation.map((item) => {
             const isActive = pathname === item.href;
-            const Icon = item.icon;
+            const Icon = item.icon as any;
 
             return (
               <Link key={item.name} href={item.href} onClick={onNavigate}>
@@ -63,10 +63,10 @@ export default function Sidebar({
                       : "hover:bg-primary/5"
                   )}
                 >
-                  <Icon className="absolute left-4 h-5 w-5 stroke-[1.5] text-muted-foreground" />
+                  <Icon className="absolute left-4 h-5 w-5 stroke-[1.5] text-white/80" />
                   <span
                     className={cn(
-                      "absolute left-14 transition-opacity duration-300 text-muted-foreground",
+                      "absolute left-14 transition-opacity duration-300 text-white/80",
                       !isExpanded && "opacity-0 group-hover:opacity-100"
                     )}
                   >
@@ -78,7 +78,7 @@ export default function Sidebar({
           })}
         </nav>
 
-        <div className="border-t border-border/50">
+        <div className="border-t border-slate-700">
           <Button
             variant="ghost"
             className={cn(
