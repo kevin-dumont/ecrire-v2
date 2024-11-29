@@ -13,21 +13,18 @@ import {
   EyeOff,
   ImageIcon,
 } from "lucide-react";
-import { PostData } from "@/app/dashboard/post/page";
+import { PostData } from "@/contexts/PostContext";
+
 interface PostPreviewProps {
-  getDisplayText: () => string;
-  isExpanded: boolean;
   postData: PostData;
+  isExpanded: boolean;
   setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-  shouldShowSeeMore: () => boolean;
 }
 
 export function PostPreview({
-  getDisplayText,
-  isExpanded,
   postData,
+  isExpanded,
   setIsExpanded,
-  shouldShowSeeMore,
 }: PostPreviewProps) {
   const [showImage, setShowImage] = useState(false);
 
@@ -124,30 +121,8 @@ export function PostPreview({
             </div>
           </div>
 
-          <div
-            className={cn(
-              "whitespace-pre-wrap text-[14px] leading-[1.4]",
-              !isExpanded && "relative"
-            )}
-          >
-            {postData.selectedHook || postData.selectedBody ? (
-              <>
-                <div>{getDisplayText()}</div>
-                {shouldShowSeeMore() && !isExpanded && (
-                  <div className="absolute bottom-0 left-0 w-full">
-                    <div className="relative">
-                      <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-background to-transparent" />
-                      <button
-                        onClick={() => setIsExpanded(true)}
-                        className="relative z-10 text-primary hover:underline text-[14px] font-medium"
-                      >
-                        ...voir plus
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
+          <div className="whitespace-pre-wrap text-[14px] leading-[1.4]">
+            {postData.finalPost || (
               <div className="text-muted-foreground">
                 Votre post apparaîtra ici...
               </div>

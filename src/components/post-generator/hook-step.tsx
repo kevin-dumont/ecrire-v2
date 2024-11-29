@@ -69,9 +69,9 @@ export default function HookStep() {
             ))}
           </div>
 
-          {isGenerating && (
-            <div className="absolute inset-0 flex justify-center items-center">
-              <RefreshCw className="h-8 w-8 animate-spin text-white" />
+          {isGenerating && !isInitialLoad && (
+            <div className="absolute inset-0 flex justify-center items-center bg-white dark:bg-black bg-opacity-70">
+              <RefreshCw className="h-8 w-8 animate-spin text-primary" />
             </div>
           )}
 

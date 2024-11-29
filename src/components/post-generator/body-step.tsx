@@ -4,15 +4,8 @@ import { useState } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  RefreshCw,
-  Copy,
-  Check,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 
 export default function BodyStep() {
   const {
@@ -21,12 +14,10 @@ export default function BodyStep() {
     bodyState: { bodies, isInitialLoad, isGenerating },
     generateNewBodies,
   } = usePostContext();
-  const [copied, setCopied] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const maxAttempts = 3;
   const bodiesPerPage = 3;
-  const { toast } = useToast();
 
   const startIndex = currentPage * bodiesPerPage;
   const currentBodies = bodies.slice(startIndex, startIndex + bodiesPerPage);
@@ -39,17 +30,6 @@ export default function BodyStep() {
     }
   };
 
-  const copyToClipboard = async () => {
-    const fullPost = `${postData.selectedHook}\n\n${postData.selectedBody}`;
-    await navigator.clipboard.writeText(fullPost);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    toast({
-      title: "Post copié !",
-      description: "Le contenu a été copié dans le presse-papier.",
-    });
-  };
-
   return (
     <div className="space-y-6">
       <div>
@@ -60,61 +40,77 @@ export default function BodyStep() {
       </div>
 
       {isInitialLoad && isGenerating ? (
-        <div className="absolute inset-0 flex justify-center items-center">
-          <RefreshCw className="h-8 w-8 animate-spin text-white mr-3" />
+        <div className="flex justify-center items-center py-8">
+          <RefreshCw className="h-8 w-8 animate-spin text-primary mr-3" />
           Génération des contenus en cours...
         </div>
       ) : (
         <>
-          <div className="space-y-4">
-            {currentBodies.map((body, index) => (
-              <Card
-                key={index}
-                className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                  postData.selectedBody === body
-                    ? "border-primary ring-2 ring-primary ring-opacity-50"
-                    : ""
-                }`}
-                onClick={() => setPostData({ ...postData, selectedBody: body })}
-              >
-                <Textarea
-                  value={body}
-                  readOnly
-                  className="min-h-[200px] resize-none border-none focus-visible:ring-0"
-                />
-              </Card>
-            ))}
+          <div className="relative">
+            <div
+              className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${
+                isGenerating ? "opacity-50" : ""
+              }`}
+            >
+              {currentBodies.map((body, index) => (
+                <Card
+                  key={index}
+                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
+                    postData.selectedBody === body
+                      ? "border-primary ring-2 ring-primary ring-opacity-50"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    setPostData({ ...postData, selectedBody: body })
+                  }
+                >
+                  <Textarea
+                    value={body}
+                    readOnly
+                    className="min-h-[200px] resize-none border-none focus-visible:ring-0"
+                  />
+                </Card>
+              ))}
+            </div>
+
+            {isGenerating && !isInitialLoad && (
+              <div className="absolute inset-0 flex justify-center items-center bg-white dark:bg-black bg-opacity-70">
+                <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="flex justify-between items-center mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(0, prev - 1))
+                  }
+                  disabled={currentPage === 0}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Précédent
+                </Button>
+
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage + 1} sur {totalPages}
+                </span>
+
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
+                  }
+                  disabled={currentPage === totalPages - 1}
+                >
+                  Suivant
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
 
-          {totalPages > 1 && (
-            <div className="flex justify-between items-center mt-4">
-              <Button
-                variant="outline"
-                onClick={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
-                disabled={currentPage === 0}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Précédent
-              </Button>
-
-              <span className="text-sm text-muted-foreground">
-                Page {currentPage + 1} sur {totalPages}
-              </span>
-
-              <Button
-                variant="outline"
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
-                }
-                disabled={currentPage === totalPages - 1}
-              >
-                Suivant
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          )}
-
-          <div className="flex justify-between mt-4">
+          <div className="flex justify-center mt-4">
             <Button
               variant="outline"
               onClick={handleGenerateMore}
@@ -126,23 +122,6 @@ export default function BodyStep() {
                 }`}
               />
               Générer de nouveaux contenus ({maxAttempts - attempts} restantes)
-            </Button>
-
-            <Button
-              variant="default"
-              onClick={copyToClipboard}
-              disabled={!postData.selectedHook || !postData.selectedBody}
-              className="button-gradient"
-            >
-              {copied ? (
-                <>
-                  <Check className="mr-2 h-5 w-5 stroke-[1.5]" /> Copié !
-                </>
-              ) : (
-                <>
-                  <Copy className="mr-2 h-5 w-5 stroke-[1.5]" /> Copier le post
-                </>
-              )}
             </Button>
           </div>
         </>

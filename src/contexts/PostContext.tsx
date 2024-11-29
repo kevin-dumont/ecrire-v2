@@ -18,6 +18,7 @@ export type PostData = {
   selectedHook: string;
   selectedBody: string;
   tone: string;
+  finalPost: string;
 };
 
 interface Step {
@@ -49,6 +50,7 @@ const defaultPostData: PostData = {
   selectedHook: "",
   selectedBody: "",
   tone: "normal",
+  finalPost: "",
 };
 
 const defaultContext: PostContextProps = {
@@ -115,6 +117,13 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
     const currentValidation = steps[currentStep - 1].validate;
     setIsNextEnabled(currentValidation(postData));
   }, [postData, currentStep, steps]);
+
+  useEffect(() => {
+    setPostData((prevData) => ({
+      ...prevData,
+      finalPost: `${prevData.selectedHook}\n\n${prevData.selectedBody}`,
+    }));
+  }, [postData.selectedHook, postData.selectedBody]);
 
   const generateNewHooks = useCallback(async () => {
     if (!postData.type || !postData.ideas) {

@@ -3,7 +3,7 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { PostData } from "@/app/dashboard/post/page";
+
 import { Target, Users, ShoppingCart } from "lucide-react";
 import {
   Select,
@@ -17,7 +17,7 @@ import { usePostContext } from "@/contexts/PostContext";
 const types = [
   {
     value: "TOFU",
-    label: "Acquérire des lead (TOFU)",
+    label: "Acquérir des leads (TOFU)",
     description:
       "Acquérir de la visibilité et une grande découvrabilité avec un post grand public",
     icon: Target,
