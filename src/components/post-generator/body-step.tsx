@@ -11,9 +11,10 @@ import {
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationPrevious,
-  PaginationNext,
 } from "@/components/ui/pagination";
+import { NextButton } from "./ui/next-button";
+import { PrevButton } from "./ui/prev-button";
+import { cx } from "class-variance-authority";
 
 const maxAttempts = 3;
 const bodiesPerPage = 3;
@@ -24,9 +25,8 @@ export default function BodyStep() {
     setPostData,
     bodyState: { bodies, isInitialLoad, isGenerating },
     generateNewBodies,
-    currentStep,
-    setCurrentStep,
   } = usePostContext();
+
   const [currentPage, setCurrentPage] = useState(0);
   const [attempts, setAttempts] = useState(0);
 
@@ -39,18 +39,6 @@ export default function BodyStep() {
       await generateNewBodies();
       setAttempts(attempts + 1);
       setCurrentPage(totalPages);
-    }
-  };
-
-  const handleNext = () => {
-    if (postData.selectedBody) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -72,11 +60,13 @@ export default function BodyStep() {
               {currentBodies.map((body, index) => (
                 <Card
                   key={index}
-                  className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                    postData.selectedBody === body
-                      ? "border-primary ring-2 ring-primary ring-opacity-50"
-                      : ""
-                  }`}
+                  className={cx(
+                    "p-4 cursor-pointer transition-all hover:shadow-md",
+                    {
+                      "border-primary ring-2 ring-primary ring-opacity-50":
+                        postData.selectedBody === body,
+                    }
+                  )}
                   onClick={() =>
                     setPostData({ ...postData, selectedBody: body })
                   }
@@ -121,31 +111,17 @@ export default function BodyStep() {
               disabled={isGenerating || attempts >= maxAttempts}
             >
               <RefreshCw
-                className={`mr-2 h-5 w-5 stroke-[1.5] ${
-                  isGenerating ? "animate-spin" : ""
-                }`}
+                className={cx("h-5 w-5 stroke-[1.5]", {
+                  "animate-spin": isGenerating,
+                })}
               />
               Générer à nouveau ({maxAttempts - attempts} essais restants)
             </Button>
           </div>
 
           <div className="flex justify-between mt-10">
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={currentStep === 1}
-            >
-              Retour
-            </Button>
-
-            <Button
-              variant="default"
-              onClick={handleNext}
-              disabled={!postData.selectedBody}
-              className="button-gradient"
-            >
-              Suivant
-            </Button>
+            <PrevButton />
+            <NextButton validateStep={() => !!postData.selectedBody} />
           </div>
         </>
       )}

@@ -2,10 +2,11 @@ import { useState } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, RefreshCcw, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "../ui/card";
 import { PostPreview } from "./post-preview";
+import { PrevButton } from "./ui/prev-button";
 
 export function PostEditionsStep() {
   const { toast } = useToast();
@@ -36,6 +37,11 @@ export function PostEditionsStep() {
     }
   };
 
+  const resetContent = () => {
+    const resetText = `${postData.selectedHook}\n\n${postData.selectedBody}`;
+    handleContentChange(resetText);
+  };
+
   return (
     <div className="grid grid-cols-[2fr_1fr] gap-4">
       <Card className="p-8">
@@ -46,20 +52,25 @@ export function PostEditionsStep() {
         />
 
         <div className="flex justify-between mt-4">
-          <Button onClick={handleBack} disabled={currentStep === 1}>
-            Retour
-          </Button>
-          <Button onClick={copyToClipboard} className="button-gradient">
-            {copied ? (
-              <>
-                <Check className="mr-2 h-5 w-5 stroke-[1.5]" /> Copié !
-              </>
-            ) : (
-              <>
-                <Copy className="mr-2 h-5 w-5 stroke-[1.5]" /> Copier le post
-              </>
-            )}
-          </Button>
+          <PrevButton />
+
+          <div className="flex gap-2">
+            <Button onClick={resetContent} variant="outline">
+              <RefreshCcw className="h-5 w-5 stroke-[1.5]" />
+              Réinitialiser le contenu
+            </Button>
+            <Button onClick={copyToClipboard} className="button-gradient">
+              {copied ? (
+                <>
+                  <Check className="h-5 w-5 stroke-[1.5]" /> Copié !
+                </>
+              ) : (
+                <>
+                  <Copy className="h-5 w-5 stroke-[1.5]" /> Copier le post
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </Card>
 

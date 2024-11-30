@@ -6,6 +6,9 @@ import { Card } from "@/components/ui/card";
 import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePostContext } from "@/contexts/PostContext";
 import { StepHeader } from "@/components/post-generator/step-header";
+import { PrevButton } from "./ui/prev-button";
+import { NextButton } from "./ui/next-button";
+import { cx } from "class-variance-authority";
 
 export default function HookStep() {
   const {
@@ -138,9 +141,9 @@ export default function HookStep() {
             disabled={isGenerating || attempts >= maxAttempts}
           >
             <RefreshCw
-              className={`mr-2 h-4 w-4 ${isGenerating ? "animate-spin" : ""}`}
+              className={cx("h-4 w-4", { "animate-spin": isGenerating })}
             />
-            Générer de nouvelles accroches ({maxAttempts - attempts} restantes)
+            Générer à nouveau ({maxAttempts - attempts} essais restants)
           </Button>
         </div>
       )}
@@ -152,12 +155,8 @@ export default function HookStep() {
       )}
 
       <div className="flex justify-between mt-4">
-        <Button onClick={handleBack} disabled={currentStep === 1}>
-          Retour
-        </Button>
-        <Button onClick={handleNext} disabled={!postData.selectedHook}>
-          Suivant
-        </Button>
+        <PrevButton />
+        <NextButton validateStep={() => !!postData.selectedHook} />
       </div>
     </Card>
   );

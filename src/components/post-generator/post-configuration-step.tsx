@@ -4,7 +4,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-import { Target, Users, ShoppingCart } from "lucide-react";
+import { Target, Users, ShoppingCart, ArrowRight } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -13,9 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePostContext } from "@/contexts/PostContext";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { StepHeader } from "./step-header";
+import { NextButton } from "./ui/next-button";
 
 const types = [
   {
@@ -62,18 +61,6 @@ export default function PostConfigurationStep() {
     return (
       postData.type !== null && postData.ideas !== "" && postData.tone !== ""
     );
-  };
-
-  const handleNext = () => {
-    if (validateStep()) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
   };
 
   const handleTypeChange = (value: "TOFU" | "MOFU" | "BOFU") => {
@@ -183,11 +170,7 @@ export default function PostConfigurationStep() {
           </div>
         </div>
 
-        <div className="flex justify-end mt-4">
-          <Button onClick={handleNext} disabled={!validateStep()}>
-            Suivant
-          </Button>
-        </div>
+        <NextButton validateStep={validateStep} />
       </div>
     </Card>
   );
