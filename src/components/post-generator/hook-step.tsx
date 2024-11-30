@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePostContext } from "@/contexts/PostContext";
+import { StepHeader } from "@/components/post-generator/step-header";
 
 export default function HookStep() {
   const {
@@ -12,6 +13,8 @@ export default function HookStep() {
     setPostData,
     hookState: { hooks, isGenerating, isInitialLoad },
     generateNewHooks,
+    currentStep,
+    setCurrentStep,
   } = usePostContext();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -19,10 +22,11 @@ export default function HookStep() {
   const maxAttempts = 3;
   const hooksPerPage = 5;
 
-  const handleGenerateMore = () => {
+  const handleGenerateMore = async () => {
     if (attempts < maxAttempts) {
-      generateNewHooks();
+      await generateNewHooks();
       setAttempts(attempts + 1);
+      setCurrentPage(totalPages);
     }
   };
 
@@ -30,18 +34,20 @@ export default function HookStep() {
   const currentHooks = hooks.slice(startIndex, startIndex + hooksPerPage);
   const totalPages = Math.ceil(hooks.length / hooksPerPage);
 
-  return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold mb-2">
-          Choisissez votre accroche
-        </h2>
-        <p className="text-muted-foreground mb-6">
-          Sélectionnez l&apos;accroche qui captera le mieux l&apos;attention de
-          votre audience
-        </p>
-      </div>
+  const handleNext = () => {
+    if (postData.selectedHook) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
 
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  return (
+    <Card className="p-8">
       {isInitialLoad && isGenerating ? (
         <div className="flex justify-center items-center py-8">
           <RefreshCw className="h-8 w-8 animate-spin text-primary mr-3" />
@@ -144,6 +150,15 @@ export default function HookStep() {
           Vous avez atteint le nombre maximum de tentatives.
         </p>
       )}
-    </div>
+
+      <div className="flex justify-between mt-4">
+        <Button onClick={handleBack} disabled={currentStep === 1}>
+          Retour
+        </Button>
+        <Button onClick={handleNext} disabled={!postData.selectedHook}>
+          Suivant
+        </Button>
+      </div>
+    </Card>
   );
 }

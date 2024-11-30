@@ -131,9 +131,7 @@ export default function DashboardLayout({
       </div>
 
       {/* Main content */}
-      <main className="md:pl-14 pt-14 md:pt-0">
-        <div className="min-h-screen">{children}</div>
-      </main>
+      <main className="md:pl-14 pt-14 md:pt-0">{children}</main>
     </div>
   );
 }

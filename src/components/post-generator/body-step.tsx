@@ -4,8 +4,19 @@ import { useState } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination";
+
+const maxAttempts = 3;
+const bodiesPerPage = 3;
 
 export default function BodyStep() {
   const {
@@ -13,32 +24,38 @@ export default function BodyStep() {
     setPostData,
     bodyState: { bodies, isInitialLoad, isGenerating },
     generateNewBodies,
+    currentStep,
+    setCurrentStep,
   } = usePostContext();
   const [currentPage, setCurrentPage] = useState(0);
   const [attempts, setAttempts] = useState(0);
-  const maxAttempts = 3;
-  const bodiesPerPage = 3;
 
   const startIndex = currentPage * bodiesPerPage;
   const currentBodies = bodies.slice(startIndex, startIndex + bodiesPerPage);
   const totalPages = Math.ceil(bodies.length / bodiesPerPage);
 
-  const handleGenerateMore = () => {
+  const handleGenerateMore = async () => {
     if (attempts < maxAttempts) {
-      generateNewBodies();
+      await generateNewBodies();
       setAttempts(attempts + 1);
+      setCurrentPage(totalPages);
+    }
+  };
+
+  const handleNext = () => {
+    if (postData.selectedBody) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Contenu du post</h2>
-        <p className="text-muted-foreground mb-6">
-          Choisissez et personnalisez le contenu de votre post
-        </p>
-      </div>
-
+    <Card className="p-8">
       {isInitialLoad && isGenerating ? (
         <div className="flex justify-center items-center py-8">
           <RefreshCw className="h-8 w-8 animate-spin text-primary mr-3" />
@@ -80,37 +97,24 @@ export default function BodyStep() {
             )}
 
             {totalPages > 1 && (
-              <div className="flex justify-between items-center mt-4">
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(0, prev - 1))
-                  }
-                  disabled={currentPage === 0}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Précédent
-                </Button>
-
-                <span className="text-sm text-muted-foreground">
-                  Page {currentPage + 1} sur {totalPages}
-                </span>
-
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1))
-                  }
-                  disabled={currentPage === totalPages - 1}
-                >
-                  Suivant
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+              <Pagination className="my-4">
+                <PaginationContent>
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <PaginationItem key={index}>
+                      <PaginationLink
+                        isActive={index === currentPage}
+                        onClick={() => setCurrentPage(index)}
+                      >
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                </PaginationContent>
+              </Pagination>
             )}
           </div>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-5">
             <Button
               variant="outline"
               onClick={handleGenerateMore}
@@ -121,17 +125,30 @@ export default function BodyStep() {
                   isGenerating ? "animate-spin" : ""
                 }`}
               />
-              Générer de nouveaux contenus ({maxAttempts - attempts} restantes)
+              Générer à nouveau ({maxAttempts - attempts} essais restants)
+            </Button>
+          </div>
+
+          <div className="flex justify-between mt-10">
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              disabled={currentStep === 1}
+            >
+              Retour
+            </Button>
+
+            <Button
+              variant="default"
+              onClick={handleNext}
+              disabled={!postData.selectedBody}
+              className="button-gradient"
+            >
+              Suivant
             </Button>
           </div>
         </>
       )}
-
-      {attempts >= maxAttempts && (
-        <p className="text-muted-foreground mb-4 text-sm text-center">
-          Vous avez atteint le nombre maximum de tentatives.
-        </p>
-      )}
-    </div>
+    </Card>
   );
 }

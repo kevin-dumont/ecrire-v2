@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PenLine } from "lucide-react";
@@ -8,7 +9,7 @@ export default function DashboardPage() {
     <div className="p-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Tableau de bord</h1>
-        
+
         <div className="grid gap-6">
           <Card className="p-6 feature-card">
             <div className="flex items-center justify-between">

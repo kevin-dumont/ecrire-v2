@@ -4,11 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Copy, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Card } from "../ui/card";
+import { PostPreview } from "./post-preview";
 
 export function PostEditionsStep() {
-  const { postData, setPostData } = usePostContext();
-  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const { postData, setPostData, currentStep, setCurrentStep } =
+    usePostContext();
 
   const handleContentChange = (content: string) => {
     setPostData({ ...postData, finalPost: content });
@@ -24,38 +30,46 @@ export function PostEditionsStep() {
     });
   };
 
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Édition du post</h2>
-        <p className="text-muted-foreground mb-6">
-          Modifiez et copiez le contenu de votre post
-        </p>
-      </div>
+    <div className="grid grid-cols-[2fr_1fr] gap-4">
+      <Card className="p-8">
+        <Textarea
+          value={postData.finalPost}
+          onChange={(e) => handleContentChange(e.target.value)}
+          className="min-h-[200px] "
+        />
 
-      <Textarea
-        value={postData.finalPost}
-        onChange={(e) => handleContentChange(e.target.value)}
-        className="min-h-[400px]"
-      />
+        <div className="flex justify-between mt-4">
+          <Button onClick={handleBack} disabled={currentStep === 1}>
+            Retour
+          </Button>
+          <Button onClick={copyToClipboard} className="button-gradient">
+            {copied ? (
+              <>
+                <Check className="mr-2 h-5 w-5 stroke-[1.5]" /> Copié !
+              </>
+            ) : (
+              <>
+                <Copy className="mr-2 h-5 w-5 stroke-[1.5]" /> Copier le post
+              </>
+            )}
+          </Button>
+        </div>
+      </Card>
 
-      <div className="flex justify-center mt-4">
-        <Button
-          variant="default"
-          onClick={copyToClipboard}
-          className="button-gradient"
-        >
-          {copied ? (
-            <>
-              <Check className="mr-2 h-5 w-5 stroke-[1.5]" /> Copié !
-            </>
-          ) : (
-            <>
-              <Copy className="mr-2 h-5 w-5 stroke-[1.5]" /> Copier le post
-            </>
-          )}
-        </Button>
-      </div>
+      <Card className="p-3 bg-neutral-50 dark:bg-neutral-900">
+        <PostPreview
+          postData={postData}
+          isExpanded={isExpanded}
+          setIsExpanded={setIsExpanded}
+        />
+      </Card>
     </div>
   );
 }

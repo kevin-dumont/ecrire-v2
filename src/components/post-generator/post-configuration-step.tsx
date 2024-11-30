@@ -13,6 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePostContext } from "@/contexts/PostContext";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { StepHeader } from "./step-header";
 
 const types = [
   {
@@ -52,7 +55,26 @@ const sizes = [
 ];
 
 export default function PostConfigurationStep() {
-  const { postData, setPostData } = usePostContext();
+  const { postData, setPostData, setCurrentStep, currentStep } =
+    usePostContext();
+
+  const validateStep = () => {
+    return (
+      postData.type !== null && postData.ideas !== "" && postData.tone !== ""
+    );
+  };
+
+  const handleNext = () => {
+    if (validateStep()) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
 
   const handleTypeChange = (value: "TOFU" | "MOFU" | "BOFU") => {
     const updatedData = { ...postData, type: value };
@@ -75,14 +97,7 @@ export default function PostConfigurationStep() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="mb-10">
-        <h2 className="text-lg font-semibold mb-1">Configuration du post</h2>
-        <p className="text-muted-foreground mb-4 text-sm">
-          Définissez les paramètres de votre post
-        </p>
-      </div>
-
+    <Card className="p-8">
       <div>
         <Label className="mb-3">Type de Post</Label>
         <RadioGroup
@@ -99,7 +114,7 @@ export default function PostConfigurationStep() {
               />
               <Label
                 htmlFor={type.value}
-                className="flex items-start space-x-2 border dark:border-neutral-800 rounded-lg p-3 cursor-pointer hover:bg-accent peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
+                className="flex items-start space-x-2 border bg-accent hover:bg-accent/50 dark:border-neutral-800 rounded-lg p-3 cursor-pointer peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
               >
                 <type.icon className="h-5 w-5 text-primary shrink-0" />
                 <div className="space-y-1.5">
@@ -167,7 +182,13 @@ export default function PostConfigurationStep() {
             </div>
           </div>
         </div>
+
+        <div className="flex justify-end mt-4">
+          <Button onClick={handleNext} disabled={!validateStep()}>
+            Suivant
+          </Button>
+        </div>
       </div>
-    </div>
+    </Card>
   );
 }
