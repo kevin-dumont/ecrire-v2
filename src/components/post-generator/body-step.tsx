@@ -6,15 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-} from "@/components/ui/pagination";
 import { NextButton } from "./ui/next-button";
 import { PrevButton } from "./ui/prev-button";
 import { cx } from "class-variance-authority";
+import { usePagination } from "@/hooks/usePagination";
+import { Paginate } from "@/components/ui/Paginate";
 
 const maxAttempts = 3;
 const bodiesPerPage = 3;
@@ -27,18 +23,18 @@ export default function BodyStep() {
     generateNewBodies,
   } = usePostContext();
 
-  const [currentPage, setCurrentPage] = useState(0);
   const [attempts, setAttempts] = useState(0);
 
-  const startIndex = currentPage * bodiesPerPage;
-  const currentBodies = bodies.slice(startIndex, startIndex + bodiesPerPage);
-  const totalPages = Math.ceil(bodies.length / bodiesPerPage);
+  const paginate = usePagination({
+    items: bodies,
+    itemsPerPage: bodiesPerPage,
+  });
 
   const handleGenerateMore = async () => {
     if (attempts < maxAttempts) {
       await generateNewBodies();
       setAttempts(attempts + 1);
-      setCurrentPage(totalPages);
+      paginate.goToLastPage();
     }
   };
 
@@ -57,7 +53,7 @@ export default function BodyStep() {
                 isGenerating ? "opacity-50" : ""
               }`}
             >
-              {currentBodies.map((body, index) => (
+              {paginate.currentItems.map((body, index) => (
                 <Card
                   key={index}
                   className={cx(
@@ -86,22 +82,7 @@ export default function BodyStep() {
               </div>
             )}
 
-            {totalPages > 1 && (
-              <Pagination className="my-4">
-                <PaginationContent>
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <PaginationItem key={index}>
-                      <PaginationLink
-                        isActive={index === currentPage}
-                        onClick={() => setCurrentPage(index)}
-                      >
-                        {index + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                </PaginationContent>
-              </Pagination>
-            )}
+            <Paginate {...paginate} />
           </div>
 
           <div className="flex justify-center mt-5">
