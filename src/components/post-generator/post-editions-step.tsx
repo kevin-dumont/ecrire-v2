@@ -36,7 +36,7 @@ export function PostEditionsStep() {
       <Textarea
         value={postData.finalPost}
         onChange={(e) => handleContentChange(e.target.value)}
-        className="min-h-[200px] resize-none border-none focus-visible:ring-0"
+        className="min-h-[400px]"
       />
 
       <div className="flex justify-center mt-4">

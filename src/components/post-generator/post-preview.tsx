@@ -12,6 +12,8 @@ import {
   Eye,
   EyeOff,
   ImageIcon,
+  Smartphone,
+  Laptop,
 } from "lucide-react";
 import { PostData } from "@/contexts/PostContext";
 
@@ -27,6 +29,41 @@ export function PostPreview({
   setIsExpanded,
 }: PostPreviewProps) {
   const [showImage, setShowImage] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  const getDisplayText = () => {
+    if (isExpanded) {
+      return postData.finalPost;
+    }
+
+    const maxLines = isMobileView ? 2 : 3;
+    const lines = postData.finalPost.split("\n");
+    let visibleText = "";
+    let lineCount = 0;
+
+    for (let line of lines) {
+      if (lineCount >= maxLines) break;
+      if (line.trim() === "" && lineCount === maxLines - 1) break; // Skip empty last line
+      visibleText += line + "\n";
+      lineCount++;
+    }
+
+    if (lineCount >= maxLines && lines.length > maxLines) {
+      visibleText = visibleText.trimEnd();
+    }
+
+    return visibleText.trimEnd();
+  };
+
+  const shouldShowSeeMore = () => {
+    if (isExpanded) return false;
+    const maxLines = isMobileView ? 2 : 3;
+    const lines = postData.finalPost.split("\n");
+    return (
+      lines.length > maxLines ||
+      (lines.length === maxLines && lines[maxLines - 1].trim() !== "")
+    );
+  };
 
   return (
     <div className="hidden lg:flex flex-col gap-2 flex-[0.75]">
@@ -57,6 +94,23 @@ export function PostPreview({
           >
             {!showImage ? "Avec Image" : "Sans Image"}
             <ImageIcon className="h-4 w-4 stroke-[1.5]" />
+          </Button>
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => setIsMobileView(!isMobileView)}
+          >
+            {isMobileView ? (
+              <>
+                <Laptop className="h-4 w-4 stroke-[1.5]" />
+                Desktop
+              </>
+            ) : (
+              <>
+                <Smartphone className="h-4 w-4 stroke-[1.5]" />
+                Mobile
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -122,7 +176,22 @@ export function PostPreview({
           </div>
 
           <div className="whitespace-pre-wrap text-[14px] leading-[1.4]">
-            {postData.finalPost || (
+            {postData.finalPost ? (
+              <div className="inline-block">
+                <span>{getDisplayText()}</span>
+                {shouldShowSeeMore() && !isExpanded && (
+                  <>
+                    <span className="inline-block w-3"></span>
+                    <button
+                      onClick={() => setIsExpanded(true)}
+                      className="text-primary hover:underline text-[14px] font-medium"
+                    >
+                      ... plus
+                    </button>
+                  </>
+                )}
+              </div>
+            ) : (
               <div className="text-muted-foreground">
                 Votre post apparaîtra ici...
               </div>
