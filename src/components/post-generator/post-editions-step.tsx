@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Check, RefreshCcw, ArrowLeft } from "lucide-react";
+import { Copy, Check, RefreshCcw, Bold, Italic } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "../ui/card";
 import { PostPreview } from "./post-preview";
 import { PrevButton } from "./ui/prev-button";
+import {
+  toggleBoldText,
+  toggleItalicText,
+} from "@/services/textConversionService";
+import { transformSelectedText } from "@/services/textSelectionHelper";
 
 export function PostEditionsStep() {
   const { toast } = useToast();
@@ -14,8 +19,8 @@ export function PostEditionsStep() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const { postData, setPostData, currentStep, setCurrentStep } =
-    usePostContext();
+  const { postData, setPostData } = usePostContext();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleContentChange = (content: string) => {
     setPostData({ ...postData, finalPost: content });
@@ -36,10 +41,27 @@ export function PostEditionsStep() {
     handleContentChange(resetText);
   };
 
+  const applyTransformation = (transformFn: (text: string) => string) => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      const newText = transformSelectedText(textarea, transformFn);
+      handleContentChange(newText);
+    }
+  };
+
   return (
     <div className="grid grid-cols-[2fr_1fr] gap-4">
       <Card className="p-8">
+        <div className="flex gap-2 mb-4">
+          <Button onClick={() => applyTransformation(toggleBoldText)}>
+            <Bold className="h-5 w-5" />
+          </Button>
+          <Button onClick={() => applyTransformation(toggleItalicText)}>
+            <Italic className="h-5 w-5" />
+          </Button>
+        </div>
         <Textarea
+          ref={textareaRef}
           value={postData.finalPost}
           onChange={(e) => handleContentChange(e.target.value)}
           className="min-h-[200px] "
