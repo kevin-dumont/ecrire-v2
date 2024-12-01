@@ -31,12 +31,6 @@ export function PostEditionsStep() {
     });
   };
 
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
   const resetContent = () => {
     const resetText = `${postData.selectedHook}\n\n${postData.selectedBody}`;
     handleContentChange(resetText);
@@ -51,10 +45,10 @@ export function PostEditionsStep() {
           className="min-h-[200px] "
         />
 
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-4 items-end">
           <PrevButton />
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-end">
             <Button onClick={resetContent} variant="outline">
               <RefreshCcw className="h-5 w-5 stroke-[1.5]" />
               Réinitialiser le contenu

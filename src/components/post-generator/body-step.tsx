@@ -22,10 +22,7 @@ export default function BodyStep() {
 
   const attempts = useAttempts({ maxAttempts: 3 });
 
-  const paginate = usePagination({
-    items: bodies,
-    itemsPerPage: 3,
-  });
+  const paginate = usePagination({ items: bodies, itemsPerPage: 3 });
 
   const handleGenerateMore = async () => {
     if (attempts.hasLeft) {

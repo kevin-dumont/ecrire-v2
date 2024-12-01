@@ -16,10 +16,8 @@ export function NextButton({ validateStep }: NextButtonProps) {
   };
 
   return (
-    <div className="flex justify-end mt-4">
-      <Button onClick={handleNext} disabled={!validateStep()}>
-        Suivant <ArrowRight className="h-5 w-5 stroke-[1.5]" />
-      </Button>
-    </div>
+    <Button onClick={handleNext} disabled={!validateStep()}>
+      Suivant <ArrowRight className="h-5 w-5 stroke-[1.5]" />
+    </Button>
   );
 }

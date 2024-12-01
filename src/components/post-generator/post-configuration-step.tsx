@@ -170,7 +170,9 @@ export default function PostConfigurationStep() {
           </div>
         </div>
 
-        <NextButton validateStep={validateStep} />
+        <div className="flex justify-end mt-4">
+          <NextButton validateStep={validateStep} />
+        </div>
       </div>
     </Card>
   );
