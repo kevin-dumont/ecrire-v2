@@ -19,6 +19,7 @@ export type PostData = {
   selectedBody: string;
   tone: string;
   finalPost: string;
+  size: "short" | "medium" | "long";
 };
 
 interface Step {
@@ -51,6 +52,7 @@ const defaultPostData: PostData = {
   selectedBody: "",
   tone: "normal",
   finalPost: "",
+  size: "short",
 };
 
 const defaultContext: PostContextProps = {

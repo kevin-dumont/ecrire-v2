@@ -1,6 +1,6 @@
 "use client";
 
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { CustomRadioGroup } from "@/components/ui/custom-radio-group";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -23,21 +23,21 @@ const types = [
     description:
       "Acquérir de la visibilité et une grande découvrabilité avec un post grand public",
     icon: Target,
-  },
+  } as const,
   {
     value: "MOFU",
     label: "Acquérir des prospects (MOFU)",
     description:
       "Générez des prospects qualifiés avec du contenu à valeur ajoutée",
     icon: Users,
-  },
+  } as const,
   {
     value: "BOFU",
     label: "Convertir en clients (BOFU)",
     description:
       "Convertissez vos prospects en clients avec des offres ciblées",
     icon: ShoppingCart,
-  },
+  } as const,
 ];
 
 const tones = [
@@ -54,8 +54,7 @@ const sizes = [
 ];
 
 export default function PostConfigurationStep() {
-  const { postData, setPostData, setCurrentStep, currentStep } =
-    usePostContext();
+  const { postData, setPostData } = usePostContext();
 
   const validateStep = () => {
     return (
@@ -64,56 +63,30 @@ export default function PostConfigurationStep() {
   };
 
   const handleTypeChange = (value: "TOFU" | "MOFU" | "BOFU") => {
-    const updatedData = { ...postData, type: value };
-    setPostData(updatedData);
+    setPostData({ ...postData, type: value });
   };
 
   const handleIdeasChange = (ideas: string) => {
-    const updatedData = { ...postData, ideas };
-    setPostData(updatedData);
+    setPostData({ ...postData, ideas });
   };
 
   const handleToneChange = (tone: string) => {
-    const updatedData = { ...postData, tone };
-    setPostData(updatedData);
+    setPostData({ ...postData, tone });
   };
 
-  const handleSizeChange = (size: string) => {
-    const updatedData = { ...postData, size };
-    setPostData(updatedData);
+  const handleSizeChange = (size: "short" | "medium" | "long") => {
+    setPostData({ ...postData, size });
   };
 
   return (
     <Card className="p-8">
       <div>
         <Label className="mb-3">Type de Post</Label>
-        <RadioGroup
-          value={postData.type || undefined}
+        <CustomRadioGroup<"TOFU" | "MOFU" | "BOFU">
+          options={types}
+          selectedValue={postData.type || undefined}
           onValueChange={handleTypeChange}
-          className="flex gap-2"
-        >
-          {types.map((type) => (
-            <div key={type.value} className="flex-1">
-              <RadioGroupItem
-                value={type.value}
-                id={type.value}
-                className="peer sr-only"
-              />
-              <Label
-                htmlFor={type.value}
-                className="flex items-start space-x-2 border bg-accent hover:bg-accent/50 dark:border-neutral-800 rounded-lg p-3 cursor-pointer peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
-              >
-                <type.icon className="h-5 w-5 text-primary shrink-0" />
-                <div className="space-y-1.5">
-                  <p className="font-medium leading-none">{type.label}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {type.description}
-                  </p>
-                </div>
-              </Label>
-            </div>
-          ))}
-        </RadioGroup>
+        />
       </div>
 
       <div className="space-y-6 mt-6">
