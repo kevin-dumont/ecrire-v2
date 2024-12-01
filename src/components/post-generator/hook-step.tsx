@@ -1,19 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RefreshCw } from "lucide-react";
-import { usePostContext } from "@/contexts/PostContext";
-import { StepHeader } from "@/components/post-generator/step-header";
 import { PrevButton } from "./ui/prev-button";
 import { NextButton } from "./ui/next-button";
 import { cx } from "class-variance-authority";
-import { usePagination } from "@/hooks/usePagination";
+import { usePagination } from "@/hooks/use-pagination";
 import { Paginate } from "@/components/ui/Paginate";
-
-const maxAttempts = 3;
-const hooksPerPage = 5;
+import { useAttempts } from "@/hooks/useAttempts";
 
 export default function HookStep() {
   const {
@@ -23,17 +19,14 @@ export default function HookStep() {
     generateNewHooks,
   } = usePostContext();
 
-  const [attempts, setAttempts] = useState(0);
+  const attempts = useAttempts({ maxAttempts: 3 });
 
-  const paginate = usePagination({
-    items: hooks,
-    itemsPerPage: hooksPerPage,
-  });
+  const paginate = usePagination({ items: hooks, itemsPerPage: 5 });
 
   const handleGenerateMore = async () => {
-    if (attempts < maxAttempts) {
+    if (attempts.hasLeft) {
       await generateNewHooks();
-      setAttempts(attempts + 1);
+      attempts.increment();
       paginate.goToLastPage();
     }
   };
@@ -84,12 +77,12 @@ export default function HookStep() {
           </p>
           <Button
             onClick={handleGenerateMore}
-            disabled={isGenerating || attempts >= maxAttempts}
+            disabled={isGenerating || !attempts.hasLeft}
           >
             <RefreshCw
               className={`mr-2 h-4 w-4 ${isGenerating ? "animate-spin" : ""}`}
             />
-            Réessayer ({maxAttempts - attempts} restantes)
+            Réessayer ({attempts.remaining} restantes)
           </Button>
         </div>
       )}
@@ -99,12 +92,12 @@ export default function HookStep() {
           <Button
             variant="outline"
             onClick={handleGenerateMore}
-            disabled={isGenerating || attempts >= maxAttempts}
+            disabled={isGenerating || !attempts.hasLeft}
           >
             <RefreshCw
               className={cx("h-4 w-4", { "animate-spin": isGenerating })}
             />
-            Générer à nouveau ({maxAttempts - attempts} essais restants)
+            Générer à nouveau ({attempts.remaining} essais restants)
           </Button>
         </div>
       )}

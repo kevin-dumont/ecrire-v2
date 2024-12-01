@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,11 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { NextButton } from "./ui/next-button";
 import { PrevButton } from "./ui/prev-button";
 import { cx } from "class-variance-authority";
-import { usePagination } from "@/hooks/usePagination";
+import { usePagination } from "@/hooks/use-pagination";
 import { Paginate } from "@/components/ui/Paginate";
-
-const maxAttempts = 3;
-const bodiesPerPage = 3;
+import { useAttempts } from "@/hooks/useAttempts";
 
 export default function BodyStep() {
   const {
@@ -23,17 +20,17 @@ export default function BodyStep() {
     generateNewBodies,
   } = usePostContext();
 
-  const [attempts, setAttempts] = useState(0);
+  const attempts = useAttempts({ maxAttempts: 3 });
 
   const paginate = usePagination({
     items: bodies,
-    itemsPerPage: bodiesPerPage,
+    itemsPerPage: 3,
   });
 
   const handleGenerateMore = async () => {
-    if (attempts < maxAttempts) {
+    if (attempts.hasLeft) {
       await generateNewBodies();
-      setAttempts(attempts + 1);
+      attempts.increment();
       paginate.goToLastPage();
     }
   };
@@ -89,14 +86,14 @@ export default function BodyStep() {
             <Button
               variant="outline"
               onClick={handleGenerateMore}
-              disabled={isGenerating || attempts >= maxAttempts}
+              disabled={isGenerating || !attempts.hasLeft}
             >
               <RefreshCw
                 className={cx("h-5 w-5 stroke-[1.5]", {
                   "animate-spin": isGenerating,
                 })}
               />
-              Générer à nouveau ({maxAttempts - attempts} essais restants)
+              Générer à nouveau ({attempts.remaining} essais restants)
             </Button>
           </div>
 
