@@ -1,10 +1,8 @@
-import { useState, useRef, useEffect } from "react";
-import { usePostContext } from "@/contexts/PostContext";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Copy,
-  Check,
   RefreshCcw,
   Bold,
   Italic,
@@ -15,70 +13,29 @@ import { useToast } from "@/hooks/use-toast";
 import { Card } from "../ui/card";
 import { PostPreview } from "./post-preview";
 import { PrevButton } from "./ui/prev-button";
+import { useClipboard } from "@/hooks/useClipboard";
+import { useTextSelection } from "@/hooks/useTextSelection";
+import { useTextTransformation } from "@/hooks/useTextTransformation";
 import {
+  convertToNormal,
   toggleBoldText,
   toggleItalicText,
-  toggleUnderlineText,
   toggleStrikethroughText,
-  convertToNormal,
+  toggleUnderlineText,
 } from "@/services/textConversionService";
+import { usePostContext } from "@/contexts/PostContext";
 
 export function PostEditionsStep() {
-  const { toast } = useToast();
+  const { postData } = usePostContext();
+  const { copyToClipboard } = useClipboard();
+  const { textareaRef, updateSelection } = useTextSelection();
+  const { applyTransformation, handleContentChange } = useTextTransformation();
 
   const [isExpanded, setIsExpanded] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const { postData, setPostData } = usePostContext();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const [selection, setSelection] = useState<{
-    start: number;
-    end: number;
-  } | null>(null);
-
-  const handleContentChange = (content: string) => {
-    setPostData({ ...postData, finalPost: content });
-  };
-
-  useEffect(() => {
-    if (selection && textareaRef.current) {
-      const { start, end } = selection;
-      textareaRef.current.focus();
-      textareaRef.current.setSelectionRange(start, end);
-    }
-  }, [postData.finalPost, selection]);
-
-  const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(postData.finalPost);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    toast({
-      title: "Post copié !",
-      description: "Le contenu a été copié dans le presse-papier.",
-    });
-  };
 
   const resetContent = () => {
     const resetText = `${postData.selectedHook}\n\n${postData.selectedBody}`;
     handleContentChange(resetText);
-  };
-
-  const applyTransformation = (transformFn: (text: string) => string) => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      const transformedText = transformFn(selectedText);
-      const newText =
-        textarea.value.substring(0, start) +
-        transformedText +
-        textarea.value.substring(end);
-
-      handleContentChange(newText);
-      setSelection({ start, end: start + transformedText.length });
-    }
   };
 
   return (
@@ -87,31 +44,53 @@ export function PostEditionsStep() {
         <div className="flex gap-2 mb-4">
           <Button
             variant="outline"
-            onClick={() => applyTransformation(convertToNormal)}
+            onClick={() =>
+              applyTransformation(convertToNormal, textareaRef, updateSelection)
+            }
           >
             Aa
           </Button>
           <Button
             variant="outline"
-            onClick={() => applyTransformation(toggleBoldText)}
+            onClick={() =>
+              applyTransformation(toggleBoldText, textareaRef, updateSelection)
+            }
           >
             <Bold className="h-5 w-5" />
           </Button>
           <Button
             variant="outline"
-            onClick={() => applyTransformation(toggleItalicText)}
+            onClick={() =>
+              applyTransformation(
+                toggleItalicText,
+                textareaRef,
+                updateSelection
+              )
+            }
           >
             <Italic className="h-5 w-5" />
           </Button>
           <Button
             variant="outline"
-            onClick={() => applyTransformation(toggleUnderlineText)}
+            onClick={() =>
+              applyTransformation(
+                toggleUnderlineText,
+                textareaRef,
+                updateSelection
+              )
+            }
           >
             <Underline className="h-5 w-5" />
           </Button>
           <Button
             variant="outline"
-            onClick={() => applyTransformation(toggleStrikethroughText)}
+            onClick={() =>
+              applyTransformation(
+                toggleStrikethroughText,
+                textareaRef,
+                updateSelection
+              )
+            }
           >
             <Strikethrough className="h-5 w-5" />
           </Button>
@@ -131,16 +110,11 @@ export function PostEditionsStep() {
               <RefreshCcw className="h-5 w-5 stroke-[1.5]" />
               Réinitialiser le contenu
             </Button>
-            <Button onClick={copyToClipboard} className="button-gradient">
-              {copied ? (
-                <>
-                  <Check className="h-5 w-5 stroke-[1.5]" /> Copié !
-                </>
-              ) : (
-                <>
-                  <Copy className="h-5 w-5 stroke-[1.5]" /> Copier le post
-                </>
-              )}
+            <Button
+              onClick={() => copyToClipboard(postData.finalPost)}
+              className="button-gradient"
+            >
+              <Copy className="h-5 w-5 stroke-[1.5]" /> Copier le post
             </Button>
           </div>
         </div>

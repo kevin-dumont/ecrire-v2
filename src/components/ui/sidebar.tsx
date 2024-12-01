@@ -25,14 +25,14 @@ export default function Sidebar({
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 h-screen border-r dark:border-neutral-700 light:border-neutral-900 bg-neutral-900 backdrop-blur-xl transition-all duration-300 z-50",
+        "fixed top-0 left-0 h-screen border-r bg-neutral-900 border-neutral-700 dark:border-border dark:bg-background backdrop-blur-xl transition-all duration-300 z-50",
         isExpanded ? "w-64" : "w-14 hover:w-64 group"
       )}
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
       <div className="flex h-full flex-col">
-        <div className="h-14 border-b border-neutral-700">
+        <div className="h-14 border-b border-neutral-700 dark:border-border">
           <div className="h-full px-4 flex items-center">
             <Link
               href="/dashboard"
@@ -78,7 +78,7 @@ export default function Sidebar({
           })}
         </nav>
 
-        <div className="border-t border-neutral-700">
+        <div className="border-t border-neutral-700 dark:border-border">
           <Button
             variant="ghost"
             className={cn(

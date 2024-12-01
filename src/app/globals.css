@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 3%;
+    --background: 0 0% 8%;
     --foreground: 0 0% 98%;
     --card: 0 0% 5%;
     --card-foreground: 0 0% 98%;
@@ -24,7 +24,7 @@
     --input: 0 0% 15%;
     --ring: 210 90% 50%;
     --radius: 0.5rem;
-    --primary-opacity: 210 90% 4%;
+    --primary-opacity: 0 0% 6%;
   }
 
   .light {
