@@ -20,8 +20,8 @@ import {
   toggleItalicText,
   toggleUnderlineText,
   toggleStrikethroughText,
+  convertToNormal,
 } from "@/services/textConversionService";
-import { transformSelectedText } from "@/services/textSelectionHelper";
 
 export function PostEditionsStep() {
   const { toast } = useToast();
@@ -77,8 +77,6 @@ export function PostEditionsStep() {
         textarea.value.substring(end);
 
       handleContentChange(newText);
-
-      // Save selection to restore it after state update
       setSelection({ start, end: start + transformedText.length });
     }
   };
@@ -87,16 +85,34 @@ export function PostEditionsStep() {
     <div className="grid grid-cols-[2fr_1fr] gap-4">
       <Card className="p-8">
         <div className="flex gap-2 mb-4">
-          <Button onClick={() => applyTransformation(toggleBoldText)}>
+          <Button
+            variant="outline"
+            onClick={() => applyTransformation(convertToNormal)}
+          >
+            Aa
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => applyTransformation(toggleBoldText)}
+          >
             <Bold className="h-5 w-5" />
           </Button>
-          <Button onClick={() => applyTransformation(toggleItalicText)}>
+          <Button
+            variant="outline"
+            onClick={() => applyTransformation(toggleItalicText)}
+          >
             <Italic className="h-5 w-5" />
           </Button>
-          <Button onClick={() => applyTransformation(toggleUnderlineText)}>
+          <Button
+            variant="outline"
+            onClick={() => applyTransformation(toggleUnderlineText)}
+          >
             <Underline className="h-5 w-5" />
           </Button>
-          <Button onClick={() => applyTransformation(toggleStrikethroughText)}>
+          <Button
+            variant="outline"
+            onClick={() => applyTransformation(toggleStrikethroughText)}
+          >
             <Strikethrough className="h-5 w-5" />
           </Button>
         </div>

@@ -171,7 +171,7 @@ const reverseItalicMap = Object.fromEntries(
   Object.entries(italicMap).map(([key, value]) => [value, key])
 );
 
-function convertToNormal(text: string): string {
+export function convertToNormal(text: string): string {
   return Array.from(text)
     .map((char) =>
       removeBold(removeItalic(removeUnderline(removeStrikethrough(char))))
