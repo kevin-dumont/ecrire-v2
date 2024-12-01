@@ -173,7 +173,9 @@ const reverseItalicMap = Object.fromEntries(
 
 function convertToNormal(text: string): string {
   return Array.from(text)
-    .map((char) => removeBold(removeItalic(removeUnderline(char))))
+    .map((char) =>
+      removeBold(removeItalic(removeUnderline(removeStrikethrough(char))))
+    )
     .join("");
 }
 
@@ -201,6 +203,13 @@ function convertToStyled(text: string, map: Record<string, string>): string {
     .join("");
 }
 
+function applyUnderline(text: string): string {
+  const underlineCombiningChar = "\u0332";
+  return Array.from(text)
+    .map((char) => char + underlineCombiningChar)
+    .join("");
+}
+
 export function toggleItalicText(text: string): string {
   if (text === removeItalic(text)) {
     return convertToStyled(convertToNormal(text), italicMap);
@@ -217,7 +226,26 @@ export function toggleBoldText(text: string): string {
 
 export function toggleUnderlineText(text: string): string {
   if (text === removeUnderline(text)) {
-    return convertToStyled(convertToNormal(text), underlineMap);
+    return applyUnderline(convertToNormal(text));
+  }
+  return convertToNormal(text);
+}
+
+function applyStrikethrough(text: string): string {
+  const strikethroughCombiningChar = "\u0336";
+  return Array.from(text)
+    .map((char) => char + strikethroughCombiningChar)
+    .join("");
+}
+
+function removeStrikethrough(text: string): string {
+  const strikethroughCombiningChar = "\u0336";
+  return text.split(strikethroughCombiningChar).join("");
+}
+
+export function toggleStrikethroughText(text: string): string {
+  if (text === removeStrikethrough(text)) {
+    return applyStrikethrough(convertToNormal(text));
   }
   return convertToNormal(text);
 }

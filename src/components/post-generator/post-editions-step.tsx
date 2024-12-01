@@ -2,7 +2,15 @@ import { useState, useRef, useEffect } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Check, RefreshCcw, Bold, Italic, Underline } from "lucide-react";
+import {
+  Copy,
+  Check,
+  RefreshCcw,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "../ui/card";
 import { PostPreview } from "./post-preview";
@@ -11,6 +19,7 @@ import {
   toggleBoldText,
   toggleItalicText,
   toggleUnderlineText,
+  toggleStrikethroughText,
 } from "@/services/textConversionService";
 import { transformSelectedText } from "@/services/textSelectionHelper";
 
@@ -86,6 +95,9 @@ export function PostEditionsStep() {
           </Button>
           <Button onClick={() => applyTransformation(toggleUnderlineText)}>
             <Underline className="h-5 w-5" />
+          </Button>
+          <Button onClick={() => applyTransformation(toggleStrikethroughText)}>
+            <Strikethrough className="h-5 w-5" />
           </Button>
         </div>
         <Textarea
