@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePostContext } from "@/contexts/PostContext";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Copy, Check, RefreshCcw, Bold, Italic } from "lucide-react";
+import { Copy, Check, RefreshCcw, Bold, Italic, Underline } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Card } from "../ui/card";
 import { PostPreview } from "./post-preview";
@@ -10,6 +10,7 @@ import { PrevButton } from "./ui/prev-button";
 import {
   toggleBoldText,
   toggleItalicText,
+  toggleUnderlineText,
 } from "@/services/textConversionService";
 import { transformSelectedText } from "@/services/textSelectionHelper";
 
@@ -22,9 +23,22 @@ export function PostEditionsStep() {
   const { postData, setPostData } = usePostContext();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const [selection, setSelection] = useState<{
+    start: number;
+    end: number;
+  } | null>(null);
+
   const handleContentChange = (content: string) => {
     setPostData({ ...postData, finalPost: content });
   };
+
+  useEffect(() => {
+    if (selection && textareaRef.current) {
+      const { start, end } = selection;
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(start, end);
+    }
+  }, [postData.finalPost, selection]);
 
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(postData.finalPost);
@@ -44,8 +58,19 @@ export function PostEditionsStep() {
   const applyTransformation = (transformFn: (text: string) => string) => {
     const textarea = textareaRef.current;
     if (textarea) {
-      const newText = transformSelectedText(textarea, transformFn);
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+      const transformedText = transformFn(selectedText);
+      const newText =
+        textarea.value.substring(0, start) +
+        transformedText +
+        textarea.value.substring(end);
+
       handleContentChange(newText);
+
+      // Save selection to restore it after state update
+      setSelection({ start, end: start + transformedText.length });
     }
   };
 
@@ -58,6 +83,9 @@ export function PostEditionsStep() {
           </Button>
           <Button onClick={() => applyTransformation(toggleItalicText)}>
             <Italic className="h-5 w-5" />
+          </Button>
+          <Button onClick={() => applyTransformation(toggleUnderlineText)}>
+            <Underline className="h-5 w-5" />
           </Button>
         </div>
         <Textarea

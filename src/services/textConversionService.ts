@@ -108,6 +108,61 @@ const italicMap: Record<string, string> = {
   Z: "𝘡",
 };
 
+const underlineMap: Record<string, string> = {
+  a: "a̲",
+  b: "b̲",
+  c: "c̲",
+  d: "d̲",
+  e: "e̲",
+  f: "f̲",
+  g: "g̲",
+  h: "h̲",
+  i: "i̲",
+  j: "j̲",
+  k: "k̲",
+  l: "l̲",
+  m: "m̲",
+  n: "n̲",
+  o: "o̲",
+  p: "p̲",
+  q: "q̲",
+  r: "r̲",
+  s: "s̲",
+  t: "t̲",
+  u: "u̲",
+  v: "v̲",
+  w: "w̲",
+  x: "x̲",
+  y: "y̲",
+  z: "z̲",
+  A: "A̲",
+  B: "B̲",
+  C: "C̲",
+  D: "D̲",
+  E: "E̲",
+  F: "F̲",
+  G: "G̲",
+  H: "H̲",
+  I: "I̲",
+  J: "J̲",
+  K: "K̲",
+  L: "L̲",
+  M: "M̲",
+  N: "N̲",
+  O: "O̲",
+  P: "P̲",
+  Q: "Q̲",
+  R: "R̲",
+  S: "S̲",
+  T: "T̲",
+  U: "U̲",
+  V: "V̲",
+  W: "W̲",
+  X: "X̲",
+  Y: "Y̲",
+  Z: "Z̲",
+};
+
 const reverseBoldMap = Object.fromEntries(
   Object.entries(boldMap).map(([key, value]) => [value, key])
 );
@@ -118,7 +173,7 @@ const reverseItalicMap = Object.fromEntries(
 
 function convertToNormal(text: string): string {
   return Array.from(text)
-    .map((char) => reverseBoldMap[char] || reverseItalicMap[char] || char)
+    .map((char) => removeBold(removeItalic(removeUnderline(char))))
     .join("");
 }
 
@@ -132,6 +187,12 @@ function removeItalic(text: string): string {
   return Array.from(text)
     .map((char) => reverseItalicMap[char] || char)
     .join("");
+}
+
+function removeUnderline(text: string): string {
+  const underlineCombiningChar = "\u0332";
+
+  return text.split(underlineCombiningChar).join("");
 }
 
 function convertToStyled(text: string, map: Record<string, string>): string {
@@ -150,6 +211,13 @@ export function toggleItalicText(text: string): string {
 export function toggleBoldText(text: string): string {
   if (text === removeBold(text)) {
     return convertToStyled(convertToNormal(text), boldMap);
+  }
+  return convertToNormal(text);
+}
+
+export function toggleUnderlineText(text: string): string {
+  if (text === removeUnderline(text)) {
+    return convertToStyled(convertToNormal(text), underlineMap);
   }
   return convertToNormal(text);
 }
