@@ -11,7 +11,7 @@ import HookStep from "@/components/post-generator/hook-step";
 import BodyStep from "@/components/post-generator/body-step";
 import { PostEditionsStep } from "@/components/post-generator/post-editions-step";
 import { useDependencies } from "@/contexts/DependenciesContext";
-import { PostData } from "./PostData";
+import { PostData } from "@/entities/PostData";
 
 interface Step {
   title: string;

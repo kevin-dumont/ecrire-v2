@@ -1,4 +1,4 @@
-import { PostData } from "@/contexts/PostData";
+import { PostData } from "@/entities/PostData";
 
 export interface PostGeneratorPort {
   generateHooks(

@@ -1,5 +1,5 @@
 import { PostGeneratorPort } from "@/ports/PostGeneratorPort";
-import { PostData } from "@/contexts/PostData";
+import { PostData } from "@/entities/PostData";
 import { accroches } from "@/data/accroches";
 
 const CLAUDE_API_KEY = process.env.ANTHROPIC_API_KEY;

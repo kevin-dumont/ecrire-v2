@@ -1,5 +1,5 @@
 import { PostGeneratorPort } from "@/ports/PostGeneratorPort";
-import { PostData } from "@/contexts/PostData";
+import { PostData } from "@/entities/PostData";
 
 export class MockPostGenerator implements PostGeneratorPort {
   async generateHooks(
