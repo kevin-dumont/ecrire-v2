@@ -32,7 +32,7 @@ export function CustomRadioGroup<T extends string>({
           />
           <Label
             htmlFor={option.value}
-            className="flex flex-col items-start space-y-2 border bg-gradient-to-b from-white to-gray-200 dark:from-background dark:to-neutral-950/40 shadow-sm hover:bg-accent/50 dark:border-neutral-800 rounded-lg p-3 cursor-pointer peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
+            className="flex flex-col items-start space-y-2 border bg-gradient-to-b from-white to-gray-50 dark:from-background dark:to-neutral-950/40 shadow-sm hover:bg-accent/50 dark:border-neutral-800 rounded-lg p-3 cursor-pointer peer-data-[state=checked]:border-primary peer-data-[state=checked]:ring-1 peer-data-[state=checked]:ring-primary mb-0"
           >
             <div className="flex items-center space-x-2">
               <div className="w-4 h-4 mr-2 border border-gray-300 dark:border-gray-600 rounded-full flex items-center justify-center">

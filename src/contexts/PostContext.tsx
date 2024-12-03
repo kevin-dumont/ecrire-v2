@@ -6,21 +6,12 @@ import React, {
   useEffect,
 } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { generateHooks, generateBody } from "@/lib/actions";
 import PostConfigurationStep from "@/components/post-generator/post-configuration-step";
 import HookStep from "@/components/post-generator/hook-step";
 import BodyStep from "@/components/post-generator/body-step";
 import { PostEditionsStep } from "@/components/post-generator/post-editions-step";
-
-export type PostData = {
-  type: "TOFU" | "MOFU" | "BOFU" | null;
-  ideas: string;
-  selectedHook: string;
-  selectedBody: string;
-  tone: string;
-  finalPost: string;
-  size: "short" | "medium" | "long";
-};
+import { useDependencies } from "@/contexts/DependenciesContext";
+import { PostData } from "./PostData";
 
 interface Step {
   title: string;
@@ -90,6 +81,9 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const { toast } = useToast();
+  const {
+    postGenerator: { generateHooks, generateBody },
+  } = useDependencies();
 
   const steps: Step[] = [
     {
@@ -140,7 +134,7 @@ export const PostProvider: React.FC<{ children: React.ReactNode }> = ({
     setHookState((prevState) => ({ ...prevState, isGenerating: true }));
 
     try {
-      const result = await generateHooks(postData.type, postData.ideas);
+      const result = await generateHooks(postData);
 
       if (result.error) {
         throw new Error(result.error);

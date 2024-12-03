@@ -102,7 +102,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="inline-flex items-center border border-border text-foreground py-2 px-4 rounded-full text-sm font-medium mb-4">
+              <div className="inline-flex items-center border border-border text-foreground py-2 px-4 rounded-full text-sm font-medium mb-4 bg-neutral-50">
                 <SparklesIcon className="h-4 w-4 mr-2 text-primary" />
                 Propulsé par l&apos;IA
               </div>

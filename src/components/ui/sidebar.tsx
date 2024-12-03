@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
-import ThemeSwitcher from "../ThemeSwitcher";
 
 interface SidebarProps {
   navigation: { name: string; href: string; icon: React.ComponentType }[];

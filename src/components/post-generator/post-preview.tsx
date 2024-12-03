@@ -15,7 +15,7 @@ import {
   Smartphone,
   Laptop,
 } from "lucide-react";
-import { PostData } from "@/contexts/PostContext";
+import { PostData } from "@/contexts/PostData";
 
 interface PostPreviewProps {
   postData: PostData;
