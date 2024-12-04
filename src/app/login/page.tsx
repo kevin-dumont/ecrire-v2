@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 const formSchema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -38,10 +38,11 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await createClient().auth.signInWithOtp({
         email: data.email,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          shouldCreateUser: true,
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
         },
       });
 
@@ -53,7 +54,6 @@ export default function LoginPage() {
         title: "Lien de connexion envoyé !",
         description: "Vérifiez votre boîte mail pour vous connecter.",
       });
-      
     } catch (error) {
       toast({
         title: "Erreur",
@@ -97,11 +97,9 @@ export default function LoginPage() {
               className="w-full button-gradient"
               disabled={isLoading}
             >
-              {isLoading ? (
-                "Envoi en cours..."
-              ) : (
-                "Recevoir le lien de connexion"
-              )}
+              {isLoading
+                ? "Envoi en cours..."
+                : "Recevoir le lien de connexion"}
             </Button>
           </form>
         </CardContent>
