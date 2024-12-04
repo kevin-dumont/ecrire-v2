@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import MobileHeader from "@/components/layout/MobileHeader";
 import MobileSheet from "@/components/layout/MobileSheet";
 import Sidebar from "@/components/ui/sidebar";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,7 +18,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const handleSignOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
+
       if (error) throw error;
+
       toast({
         title: "Déconnexion réussie",
         description: "À bientôt !",
@@ -46,6 +49,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen gradient-bg">
+      <div className="hidden md:flex top-0 left-14 right-0 h-14 border-b border-border/50 bg-background backdrop-blur-xl z-40 px-4 items-center justify-end">
+        <ThemeSwitcher />
+      </div>
       <MobileHeader setIsOpen={setIsOpen} />
       <MobileSheet
         isOpen={isOpen}
