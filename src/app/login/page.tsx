@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { createClient } from "@/lib/supabase/client";
+import { useDependencies } from "@/contexts/DependenciesContext";
 
 const formSchema = z.object({
   email: z.string().email("Adresse email invalide"),
@@ -26,6 +26,7 @@ type FormData = z.infer<typeof formSchema>;
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { auth } = useDependencies();
 
   const {
     register,
@@ -38,13 +39,7 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
-      const { error } = await createClient().auth.signInWithOtp({
-        email: data.email,
-        options: {
-          shouldCreateUser: true,
-          emailRedirectTo: `${window.location.origin}/auth/confirm`,
-        },
-      });
+      const { error } = await auth.signInWithEmail(data.email);
 
       if (error) {
         throw error;

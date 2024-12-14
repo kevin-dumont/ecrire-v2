@@ -13,9 +13,9 @@ import { useToast } from "@/hooks/use-toast";
 import { Card } from "../ui/card";
 import { PostPreview } from "./post-preview";
 import { PrevButton } from "./ui/prev-button";
-import { useClipboard } from "@/hooks/useClipboard";
+import { useClipboard } from "@/hooks/use-clipboard";
 import { useTextSelection } from "@/hooks/useTextSelection";
-import { useTextTransformation } from "@/hooks/useTextTransformation";
+import { useTextTransformation } from "@/hooks/use-text-transformation";
 import {
   convertToNormal,
   toggleBoldText,

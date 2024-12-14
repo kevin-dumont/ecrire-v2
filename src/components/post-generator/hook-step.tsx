@@ -9,7 +9,7 @@ import { NextButton } from "./ui/next-button";
 import { cx } from "class-variance-authority";
 import { usePagination } from "@/hooks/use-pagination";
 import { Paginate } from "@/components/ui/Paginate";
-import { useAttempts } from "@/hooks/useAttempts";
+import { useAttempts } from "@/hooks/use-attempts";
 
 export default function HookStep() {
   const {

@@ -1,23 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { PenLine, Settings } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import MobileHeader from "@/components/layout/MobileHeader";
 import MobileSheet from "@/components/layout/MobileSheet";
 import Sidebar from "@/components/ui/sidebar";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import { useDependencies } from "@/contexts/DependenciesContext";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
+  const { auth } = useDependencies();
 
   const handleSignOut = async () => {
     try {
-      const { error } = await createClient().auth.signOut();
+      const { error } = await auth.signOut();
 
       if (error) throw error;
 
@@ -25,6 +27,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         title: "Déconnexion réussie",
         description: "À bientôt !",
       });
+
+      router.push("/login");
     } catch {
       toast({
         title: "Erreur",

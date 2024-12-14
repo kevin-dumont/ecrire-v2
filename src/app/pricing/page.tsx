@@ -6,7 +6,9 @@ import { Card } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 export default function PricingPage() {
   const [loading, setLoading] = useState(false);
@@ -26,7 +28,7 @@ export default function PricingPage() {
 
       const { sessionId } = await response.json();
       const stripe = await stripePromise;
-      
+
       if (stripe) {
         const { error } = await stripe.redirectToCheckout({ sessionId });
         if (error) {
@@ -44,7 +46,9 @@ export default function PricingPage() {
     <div className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Tarification Simple et Transparente</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            Tarification Simple et Transparente
+          </h1>
           <p className="text-xl text-muted-foreground">
             Tout ce dont vous avez besoin pour réussir sur LinkedIn
           </p>

@@ -1,11 +1,4 @@
 import { usePostContext } from "@/contexts/PostContext";
-import {
-  convertToNormal,
-  toggleBoldText,
-  toggleItalicText,
-  toggleUnderlineText,
-  toggleStrikethroughText,
-} from "@/services/textConversionService";
 
 export function useTextTransformation() {
   const { postData, setPostData } = usePostContext();
